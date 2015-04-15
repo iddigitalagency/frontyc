@@ -21,31 +21,31 @@ A boilerplate for static Html5 websites (Foundation, Sass, Bourbon, Csstyle, Gul
 ## 3/ Project compilation
 
 * Manual compilation : `gulp`
-* Automatic compilation with gulp watcher : `gulp watch`
+* Automatic compilation using gulp-watcher : `****`
 
 
 ## 4/ Application structure
 
-* `public` : Public folder that will contains compiled files (www_root)
-* `tmp` : Tmp folder used for compilation
-* `vendor` : Vendor folder that contains external libraries (bower components)
-* `resources` : Resources folder that contains source files (MVP structure)
-* `resources\assets` : Contain all assets used by your application (refer to next section for more information)
-* `resources\views` : Contain all web views required for each pages
-* `resources\views\layouts` : Contain all the parent layouts (templates)
-* `resources\models` : Contain all JSON data files used by Nunjucks
+* `public\` : Public folder that will contains compiled files (www_root)
+* `tmp\` : Tmp folder used for compilation
+* `vendor\` : Vendor folder that contains external libraries (bower components)
+* `resources\` : Resources folder that contains source files (MVP structure)
+* `resources\assets\` : Contain all assets used by your application (refer to next section for more information)
+* `resources\views\` : Contain all web views required for each pages
+* `resources\views\layouts\` : Contain all the parent layouts (templates)
+* `resources\models\` : Contain all JSON data files used by Nunjucks
 
 
 ## 5/ Automated tasks (using Gulp)
 
-* Static pages generation using Nunjucks (HTML5 files from `resources\layouts` and `resources\views`)
-* Detect errors and potential problems in JavaScript code (JS files from `resources\assets\scripts`)
-* Minification of JavaScript files (JS files from `resources\assets\scripts`)
-* Dynamic images optimization (PNG, JPG, GIF and SVG from `resources\assets\images`)
-* Sass compilation and minification (SCSS files from `resources\assets\sass`)
-* Minification of Css files (CSS files from `resources\assets\sass`)
-* Fonts copy (from `resources\fonts` folder)
-* Root files copy (from `resources` folder)
+* Static pages generation using Nunjucks (HTML5 files from `resources\views\layouts\` and `resources\views\`)
+* Detect errors and potential problems in JavaScript code (JS files from `resources\assets\scripts\`)
+* Minification of JavaScript files (JS files from `resources\assets\scripts\`)
+* Dynamic images optimization (PNG, JPG, GIF and SVG from `resources\assets\images\`)
+* Sass compilation and minification (SCSS files from `resources\assets\sass\`)
+* Minification of Css files (CSS files from `resources\assets\sass\`)
+* Fonts copy (from `resources\fonts\` folder)
+* Root files copy (from `resources\assets\` folder)
 
 
 ## 6/ What's included ?
