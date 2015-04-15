@@ -1,0 +1,13 @@
+/node_modules/*
+/.sass-cache/*
+
+/vendor/*
+!/vendor/empty
+
+/tmp/*
+!/tmp/empty
+
+/public/*
+!/public/empty
+
+*.DS_Store

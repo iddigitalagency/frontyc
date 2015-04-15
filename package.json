@@ -1,0 +1,8 @@
+{
+  "name": "maoosi.static-starter",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "gulp": "^3.8.11"
+  }
+}
