@@ -8,26 +8,30 @@ var dir_root = './public/';
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
+var rename = require('gulp-rename');
 var gulp = require('gulp');
 
 
-// 1. Detect errors and potential problems in JavaScript code
-// 2. Minification of JavaScript files
 gulp.task('javascript', function() {
 
 	return gulp.src(src_assets + 'scripts/*.js')
 
+		// Errors detection
 	    .pipe(jshint())
 	    .pipe(jshint.reporter('default'))
 
-	    .pipe(concat('app.min.js'))
+	    // Concatenation
+	    .pipe(concat('app.js'))
+	    .pipe(gulp.dest(dir_root + 'assets/js/'))
+
+	    // Minification
+	    .pipe(rename('app.min.js'))
 	    .pipe(uglify())
 	    .pipe(gulp.dest(dir_root + 'assets/js/'));
 
 });
 
 
-// Sass compilation and minification
 gulp.task('sass', function() {
 
 	// todo
