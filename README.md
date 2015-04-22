@@ -38,14 +38,12 @@ A boilerplate for static Html5 websites (Foundation, Sass, Bourbon, Csstyle, Gul
 
 ## 5/ Automated tasks (using Gulp)
 
-* Static pages generation using Nunjucks (HTML5 files from `resources\views\layouts\` and `resources\views\`)
+* Static pages generation using Nunjucks (HTML5 files from `resources\views\`)
 * Detect errors and potential problems in JavaScript code (JS files from `resources\assets\scripts\`)
 * Minification of JavaScript files (JS files from `resources\assets\scripts\`)
 * Dynamic images optimization (PNG, JPG, GIF and SVG from `resources\assets\images\`)
 * Sass compilation and minification (SCSS files from `resources\assets\sass\`)
-* Minification of Css files (CSS files from `resources\assets\sass\`)
-* Fonts copy (from `resources\fonts\` folder)
-* Root files copy (from `resources\assets\` folder)
+* Root files and folders copy (from `resources\assets\` folder)
 
 
 ## 6/ What's included ?
@@ -55,5 +53,5 @@ A boilerplate for static Html5 websites (Foundation, Sass, Bourbon, Csstyle, Gul
 * Front-End Framework : [Foundation](http://foundation.zurb.com)
 * CSS Preprocessor : [Sass](http://sass-lang.com)
 * Sass Mixin Library : [Bourbon](http://bourbon.io)
-* Sass Conventions Guide : [Csstyle](http://www.csstyle.io)
+* Sass Conventions Guide : [Csstyle](http://www.csstyle.io) // Not supported by libsass
 * Templating Engine : [Nunjucks](https://mozilla.github.io/nunjucks/)
