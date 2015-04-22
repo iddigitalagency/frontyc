@@ -1,0 +1,64 @@
+
+// Import foundation settings
+// 
+   @import "foundation_settings";
+
+
+// Import normalize
+// 
+   @import "../../../vendor/bower/foundation/scss/normalize";
+
+
+// Import foundation files (uncomment files you need: http://foundation.zurb.com/docs/using-sass.html)
+// 
+   @import
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_accordion",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_alert-boxes",
+      "../../../vendor/bower/foundation/scss/foundation/components/_block-grid",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_breadcrumbs",
+      "../../../vendor/bower/foundation/scss/foundation/components/_button-groups",
+      "../../../vendor/bower/foundation/scss/foundation/components/_buttons",
+      "../../../vendor/bower/foundation/scss/foundation/components/_clearing",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_dropdown",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_dropdown-buttons",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_flex-video",
+      "../../../vendor/bower/foundation/scss/foundation/components/_forms",
+      "../../../vendor/bower/foundation/scss/foundation/components/_grid",
+      "../../../vendor/bower/foundation/scss/foundation/components/_inline-lists",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_joyride",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_keystrokes",
+      "../../../vendor/bower/foundation/scss/foundation/components/_labels",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_magellan",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_orbit",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_pagination",
+      "../../../vendor/bower/foundation/scss/foundation/components/_panels",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_pricing-tables",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_progress-bars",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_reveal",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_side-nav",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_split-buttons",
+      "../../../vendor/bower/foundation/scss/foundation/components/_sub-nav",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_switches",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_tables",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_tabs",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_thumbs",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_tooltips",
+      "../../../vendor/bower/foundation/scss/foundation/components/_top-bar",
+      "../../../vendor/bower/foundation/scss/foundation/components/_type",
+   //   "../../../vendor/bower/foundation/scss/foundation/components/_offcanvas",
+      "../../../vendor/bower/foundation/scss/foundation/components/_visibility";
+
+
+// Bourbon mixins
+// 
+   @import "../../../vendor/bower/bourbon/app/assets/stylesheets/_bourbon";
+
+
+// Csstyle.io
+// 
+   //@import "../../../vendor/bower/csstyle/csstyle";
+   
+
+// Components
+// 
+   @import "components/*";
