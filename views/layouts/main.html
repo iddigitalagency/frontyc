@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en">
+
+<head>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="">
+
+    <!-- Title -->
+    <title>{{ main.title }}</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/app.min.css">
+
+    <!-- Modernizr -->
+    <script src="js/vendor/modernizr.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="js/vendor/jquery.min.js"></script>
+
+</head>
+<body id="csstyle">
+
+    <!-- Main content (injected from views) -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Foundation -->
+    <script src="js/vendor/foundation.min.js"></script>
+    
+    <!-- Application scripts -->
+    <script src="js/app.min.js"></script>
+
+</body>
+</html>

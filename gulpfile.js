@@ -11,19 +11,24 @@ var resources_views = resources_root + 'views/';
 
 // Public compilation location
 var public_root = config.compilation_dir;
+var public_fonts = public_root + 'assets/fonts/';
 var public_scripts = public_root + 'assets/js/';
 var public_styles = public_root + 'assets/css/';
+var public_images = public_root + 'assets/img/';
 
 
 // Gulp plugins
-var gjshint = require('gulp-jshint');
-var guglify = require('gulp-uglify');
-var gconcat = require('gulp-concat');
-var grename = require('gulp-rename');
-var gutil = require('gulp-util');
-var gsass = require('gulp-sass');
-var gminifyCss = require('gulp-minify-css');
-var gbulkSass = require('gulp-sass-bulk-import');
+var jshint = require('gulp-jshint');
+var uglify = require('gulp-uglify');
+var concat = require('gulp-concat');
+var rename = require('gulp-rename');
+var util = require('gulp-util');
+var sass = require('gulp-sass');
+var minifyCss = require('gulp-minify-css');
+var bulkSass = require('gulp-sass-bulk-import');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
+var nunjucks = require('gulp-nunjucks-html');
 var del = require('del');
 
 
@@ -42,13 +47,13 @@ function collectLibraries(collection, destination, libraries) {
 
 	var libs = (typeof libraries === 'undefined') ? [] : libraries;
 
-	if (destination != 'default') gutil.log( 'Creating \'' + gutil.colors.cyan(destination + '.js') + '\'' );
-	else gutil.log( 'Adding to \'' + gutil.colors.cyan('app.js') + '\'' );
+	if (destination != 'default') util.log( 'Creating \'' + util.colors.cyan(destination) + '\'' );
+	else util.log( 'Adding to \'' + util.colors.cyan('default') + '\'' );
 
 	for (var file_number = 0, len = collection[destination].length; file_number < len; ++file_number)
 	{
 		libs.push( config.vendor_dir + collection[destination][file_number] );
-		gutil.log( gutil.colors.grey(' |--> ' + collection[destination][file_number]) );
+		util.log( util.colors.grey(' |--> ' + collection[destination][file_number]) );
 	}
 
 	return libs;
@@ -66,7 +71,7 @@ function uglycat(sources_files, dest_file) {
 	if ( dest_file.search('.js') == -1 )
 	{
 		return gulp.src(sources_files)
-		    .pipe(gconcat(dest_file))
+		    .pipe(concat(dest_file))
 		    .pipe(gulp.dest(public_scripts));
 	}
 	else
@@ -74,10 +79,10 @@ function uglycat(sources_files, dest_file) {
 		var dest_file_min = dest_file.replace('.js', '.min.js');
 
 		return gulp.src(sources_files)
-		    .pipe(gconcat(dest_file))
+		    .pipe(concat(dest_file))
 		    .pipe(gulp.dest(public_scripts))
-		    .pipe(grename(dest_file_min))
-		    .pipe(guglify())
+		    .pipe(rename(dest_file_min))
+		    .pipe(uglify())
 		    .pipe(gulp.dest(public_scripts));
 	}
 	
@@ -95,10 +100,10 @@ function minicat(sources_files, dest_file) {
 	var dest_file_min = dest_file.replace('.css', '.min.css');
 
 	return gulp.src(sources_files)
-	    .pipe(gconcat(dest_file))
+	    .pipe(concat(dest_file))
 	    .pipe(gulp.dest(public_styles))
-	    .pipe(grename(dest_file_min))
-	    .pipe(gminifyCss({compatibility: 'ie8'}))
+	    .pipe(rename(dest_file_min))
+	    .pipe(minifyCss({compatibility: 'ie8'}))
 	    .pipe(gulp.dest(public_styles));
 	
 }
@@ -134,8 +139,8 @@ gulp.task('reset', function(cb) {
 gulp.task('jshint', function() {
 
 	return gulp.src(resources_assets + 'scripts/**/*.js')
-			.pipe(gjshint())
-		    .pipe(gjshint.reporter('default'));
+			.pipe(jshint())
+		    .pipe(jshint.reporter('default'));
 
 });
 
@@ -169,9 +174,9 @@ gulp.task('js', ['jshint'], function() {
 gulp.task('sass', function() {
 
 	return gulp.src([resources_assets + 'sass/libraries.scss'])
-		.pipe(gbulkSass())
-	    .pipe(gsass())
-	    .pipe(grename('app.css'))
+		.pipe(bulkSass())
+	    .pipe(sass())
+	    .pipe(rename('app.css'))
 	    .pipe(gulp.dest(public_styles));
 
 });
@@ -202,13 +207,49 @@ gulp.task('css', ['sass'], function() {
 });
 
 
-// Copy over files
+// Copy other files
 gulp.task('copy', function() {
 
-	// TODO
+	return gulp.src([
+			resources_assets + '**/*',
+			'!'+ resources_assets + '{images,images/**,sass,sass/**,scripts,scripts/**}'
+		], {base: resources_root})
+		.pipe(gulp.dest(public_root));
+
+});
+
+
+// Optimize images
+gulp.task('img', function () {
+
+    return gulp.src([resources_assets + 'images/**/*.{gif,jpg,png,svg}'])
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest(public_images));
+
+});
+
+
+// Render nunjucks view files to Html
+gulp.task('nunjucks', function() {
+
+	return gulp.src([
+			resources_views + '*.html',
+			'!' + resources_views + 'layouts'
+		])
+		/*.pipe(data(function(file) {
+		  return require('./metadata/' + path.basename(file.path) + '.json');
+		}))*/
+		.pipe(nunjucks({
+			searchPaths: [resources_views]
+		}))
+		.pipe(gulp.dest(public_root));
 
 });
 
 
 // Gulp default task
-gulp.task('default', ['js', 'css'], function() { });
+gulp.task('default', ['js', 'css', 'img', 'copy', 'nunjucks'], function() { });
