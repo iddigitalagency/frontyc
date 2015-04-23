@@ -53,7 +53,7 @@ if(util.env.dev === true) {
 */
 
 var changeEvent = function(evt) {
-    gutil.log('File', util.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '')), 'was', util.colors.magenta(evt.type));
+    util.log('File', util.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '')), 'was', util.colors.magenta(evt.type));
 };
 
 

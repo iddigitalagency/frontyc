@@ -70,6 +70,15 @@ var paths = {
 
 
 /*
+    Export Global Vars
+*/
+
+exports.basePaths = basePaths;
+exports.vendorFiles = basePaths;
+exports.paths = basePaths;
+
+
+/*
     Gulp Plugins List
 */
 
