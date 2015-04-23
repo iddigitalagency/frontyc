@@ -74,8 +74,8 @@ var paths = {
 */
 
 exports.basePaths = basePaths;
-exports.vendorFiles = basePaths;
-exports.paths = basePaths;
+exports.vendorFiles = vendorFiles;
+exports.paths = paths;
 
 
 /*

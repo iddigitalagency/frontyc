@@ -27,7 +27,7 @@ var pngquant = require('imagemin-pngquant');
 var path = require('path');
 var del = require('del');
 
-var plugins = require("gulp-load-plugins")({
+var plugins = require('gulp-load-plugins')({
     pattern: ['gulp-*', 'gulp.*'],
     replaceString: /\bgulp[\-.]/
 });
@@ -87,14 +87,13 @@ gulp.task('reset', function(cb) {
 });
 
 
-
 /*
     Javascript Errors Detector
 */
 
 gulp.task('jshint', function() {
 
-	return gulp.src(resources_assets + 'scripts/**/*.js')
+	return gulp.src(paths.scripts.src + '**/*.js')
 			.pipe(jshint())
 		    .pipe(jshint.reporter('default'));
 
