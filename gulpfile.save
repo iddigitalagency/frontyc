@@ -1,17 +1,12 @@
 /*
     Gulp Project Config Loading
 */
-
-var cfg = require('./gulpconfig.js');
-var basePaths = cfg.basePaths;
-var vendorFiles = cfg.vendorFiles;
-var paths = cfg.paths;
+require('./gulpconfig.js');
 
 
 /*
     Gulp Required Functions
 */
-
 require('./gulpfunc.js');
 
 
@@ -41,7 +36,7 @@ var isProduction = true;
 var sassStyle = 'compressed';
 var sourceMap = false;
 
-if(util.env.dev === true) {
+if(gutil.env.dev === true) {
     sassStyle = 'expanded';
     sourceMap = true;
     isProduction = false;
@@ -53,35 +48,37 @@ if(util.env.dev === true) {
 */
 
 var changeEvent = function(evt) {
-    gutil.log('File', util.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '')), 'was', util.colors.magenta(evt.type));
+    gutil.log('File', gutil.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '')), 'was', gutil.colors.magenta(evt.type));
 };
 
 
 /*
-    Project Cleaner (public folder)
+    Project Cleaner (public folder / tmp files)
 */
 
 gulp.task('clean', function(cb) {
 
 	return del([
-		basePaths.dest +'**/*',
-		'!'+ basePaths.dest +'empty'
+		config.tmp_dir +'**/*',
+		public_root +'**/*',
+		'!'+ public_root +'empty'
 	], cb);
 
 });
 
 
 /*
-    Project Reset (public folder / bower_components / node_modules)
+    Project Reset (public folder / tmp files / bower_components / node_modules)
 */
 
 gulp.task('reset', function(cb) {
 
 	return del([
-		basePaths.dest +'**/*',
-		basePaths.bower,
-		basePaths.node,
-		'!'+ basePaths.dest +'empty'
+		config.tmp_dir +'**/*',
+		public_root +'**/*',
+		config.vendor_dir +'bower',
+		'node_modules',
+		'!'+ public_root +'empty'
 	], cb);
 
 });
