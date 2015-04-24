@@ -1,8 +1,14 @@
 /*
+    Config File
+*/
+var cfgFile = './gulpconfig.js';
+
+
+/*
     Gulp Project Config Loading
 */
 
-var cfg = require('./gulpconfig.js');
+var cfg = require(cfgFile);
 var basePaths = cfg.basePaths;
 var vendorFiles = cfg.vendorFiles;
 var paths = cfg.paths;
@@ -95,25 +101,40 @@ gulp.task('jshint', function() {
 */ 
 
 gulp.task('js', ['jshint'], function() {
-
+	
 	// Adding vendors from config
-		var main_libs = [ resources_assets + 'scripts/**/*.js' ];
-		var vendor_list = config.scripts_vendor;
+		var main_libs = [ paths.scripts.src + '**/*.js' ];
+		var vendor_list = vendorFiles.scripts;
 		
-		for (var dest_file in vendor_list)
-		{
-			if (dest_file != 'default')
-			{
+		for (var dest_file in vendor_list) {
+			if (dest_file != 'default') {
 				var vendor_libs = collectLibraries(vendor_list, dest_file);
-
-				// Concatenation & Uglifycation of current list
-					uglycat(vendor_libs, dest_file);
+				func.uglycat(vendor_libs, dest_file); // Concatenation & Uglifycation of current list
 			}
 			else main_libs = collectLibraries(vendor_list, dest_file, main_libs);
 		}
 
 	// Concatenation & Uglifycation of main libs (app.js)
-		return uglycat(main_libs, 'app.js');
+		return func.uglycat(main_libs, 'app.js');
+
+});
+
+gulp.task('oldjs', ['jshint'], function() {
+
+	// Adding vendors from config
+		var main_libs = [ paths.scripts.src + '**/*.js' ];
+		var vendor_list = vendorFiles.scripts;
+		
+		for (var dest_file in vendor_list) {
+			if (dest_file != 'default') {
+				var vendor_libs = collectLibraries(vendor_list, dest_file);
+				func.uglycat(vendor_libs, dest_file); // Concatenation & Uglifycation of current list
+			}
+			else main_libs = collectLibraries(vendor_list, dest_file, main_libs);
+		}
+
+	// Concatenation & Uglifycation of main libs (app.js)
+		return func.uglycat(main_libs, 'app.js');
 
 });
 
@@ -205,7 +226,7 @@ gulp.task('copy', function() {
     Images Compressor
 */ 
 
-gulp.task('imgmin', function () {
+gulp.task('imagemin', function () {
 
     return gulp.src([paths.images.src + '**/*.{gif,jpg,png,svg}'])
         .pipe(plugins.imagemin({

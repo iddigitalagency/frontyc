@@ -17,7 +17,7 @@ var basePaths = {
 
 var vendorFiles = {
     styles: {
-        'default': [
+        'app.css': [
             basePaths.vendor + 'bla.css'
         ],
         'test.css' : [
@@ -25,7 +25,7 @@ var vendorFiles = {
         ]
     },
     scripts: {
-        'default': [
+        'app.js': [
             basePaths.bower + 'foundation/js/foundation/foundation.js',
             basePaths.bower + 'foundation/js/foundation/foundation.topbar.js',
             basePaths.bower + 'foundation/js/foundation/foundation.accordion.js'
@@ -80,20 +80,3 @@ var paths = {
 exports.basePaths = basePaths;
 exports.vendorFiles = vendorFiles;
 exports.paths = paths;
-
-
-/*
-    Gulp Plugins List
-*/
-
-/*var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
-var rename = require('gulp-rename');
-var util = require('gulp-util');
-var sass = require('gulp-sass');
-var minifyCss = require('gulp-minify-css');
-var bulkSass = require('gulp-sass-bulk-import');
-var imagemin = require('gulp-imagemin');
-var nunjucks = require('gulp-nunjucks-html');
-var data = require('gulp-data');*/

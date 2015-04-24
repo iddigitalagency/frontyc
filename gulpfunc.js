@@ -9,13 +9,13 @@ function collectLibraries(collection, destination, libraries) {
 
 	var libs = (typeof libraries === 'undefined') ? [] : libraries;
 
-	if (destination != 'default') util.log( 'Creating \'' + util.colors.cyan(destination) + '\'' );
-	else util.log( 'Adding to \'' + util.colors.cyan('default') + '\'' );
+	if (destination != 'default') console.log( 'Creating \'' + console.colors.cyan(destination) + '\'' );
+	else console.log( 'Adding to \'' + console.colors.cyan('default') + '\'' );
 
 	for (var file_number = 0, len = collection[destination].length; file_number < len; ++file_number)
 	{
 		libs.push( config.vendor_dir + collection[destination][file_number] );
-		util.log( util.colors.grey(' |--> ' + collection[destination][file_number]) );
+		console.log( console.colors.grey(' |--> ' + collection[destination][file_number]) );
 	}
 
 	return libs;
