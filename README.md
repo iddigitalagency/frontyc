@@ -9,7 +9,9 @@ A boilerplate for static Html5 websites (Foundation, Sass, Bourbon, Csstyle, Gul
 * Gulp: `npm install -g gulp`
 * Bower: `npm install -g bower`
 * Nunjucks: `npm install -g nunjucks`
-* Ruby (Sass compilation): https://www.ruby-lang.org/en/documentation/installation/
+* Ruby (Used for Sass): https://www.ruby-lang.org/en/documentation/installation/
+* Sass Gem: http://sass-lang.com/install
+* Sass Globbing Plugin: https://github.com/chriseppstein/sass-globbing
 
 
 ## 2/ Devbox project setup

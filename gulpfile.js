@@ -6,13 +6,14 @@ var cfg = require('./gulpconfig.js');
 var basePaths = cfg.basePaths;
 var vendorFiles = cfg.vendorFiles;
 var paths = cfg.paths;
+var useRubySass = true;
 
 
 /*
     Gulp Required Functions
 */
 
-require('./gulpfunc.js');
+var func = require('./gulpfunc.js');
 
 
 /*
@@ -20,32 +21,21 @@ require('./gulpfunc.js');
 */
 
 var gulp = require('gulp');
-
-var es = require('event-stream');
-var util = require('gulp-util');
-var pngquant = require('imagemin-pngquant');
-var path = require('path');
-var del = require('del');
+var gulpLoadPlugins = require('gulp-load-plugins');
 
 var plugins = require('gulp-load-plugins')({
+	scope: ['devDependencies'],
     pattern: ['gulp-*', 'gulp.*'],
-    replaceString: /\bgulp[\-.]/
+    replaceString: /^gulp(-|\.)/,
+    camelize: true
 });
 
-
-/*
-    Gulp --dev
-*/
-
-var isProduction = true;
-var sassStyle = 'compressed';
-var sourceMap = false;
-
-if(util.env.dev === true) {
-    sassStyle = 'expanded';
-    sourceMap = true;
-    isProduction = false;
-}
+var es = require('event-stream');
+var pngquant = require('imagemin-pngquant');
+var path = require('path');
+var remove = require('del');
+var stylish = require('jshint-stylish');
+var console = plugins.util;
 
 
 /*
@@ -53,7 +43,7 @@ if(util.env.dev === true) {
 */
 
 var changeEvent = function(evt) {
-    util.log('File', util.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '')), 'was', util.colors.magenta(evt.type));
+    console.log('File', console.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '')), 'was', console.colors.magenta(evt.type));
 };
 
 
@@ -63,7 +53,7 @@ var changeEvent = function(evt) {
 
 gulp.task('clean', function(cb) {
 
-	return del([
+	return remove([
 		basePaths.dest +'**/*',
 		'!'+ basePaths.dest +'empty'
 	], cb);
@@ -77,7 +67,7 @@ gulp.task('clean', function(cb) {
 
 gulp.task('reset', function(cb) {
 
-	return del([
+	return remove([
 		basePaths.dest +'**/*',
 		basePaths.bower,
 		basePaths.node,
@@ -94,8 +84,8 @@ gulp.task('reset', function(cb) {
 gulp.task('jshint', function() {
 
 	return gulp.src(paths.scripts.src + '**/*.js')
-			.pipe(jshint())
-		    .pipe(jshint.reporter('default'));
+			.pipe(plugins.jshint())
+		    .pipe(plugins.jshint.reporter(stylish));
 
 });
 
@@ -134,11 +124,24 @@ gulp.task('js', ['jshint'], function() {
 
 gulp.task('sass', function() {
 
-	return gulp.src([resources_assets + 'sass/libraries.scss'])
-		.pipe(bulkSass())
-	    .pipe(sass())
-	    .pipe(rename('app.css'))
-	    .pipe(gulp.dest(public_styles));
+	if (useRubySass) {
+
+		return plugins.rubySass(paths.styles.src + 'libraries.scss', {require: 'sass-globbing', loadPath: paths.styles.src})
+			    .on('error', function(err){
+			    	new console.PluginError('Ruby Sass', err.message, {showStack: true});
+			    })
+			    .pipe(plugins.rename('app.css'))
+			    .pipe(gulp.dest(paths.styles.dest));
+
+	} else {
+
+		return gulp.src(paths.styles.src + 'libraries.scss')
+				.pipe(plugins.sassBulkImport())
+				.pipe(plugins.sass())
+			    .pipe(plugins.rename('app.css'))
+			    .pipe(gulp.dest(paths.styles.dest));
+
+	}
 
 });
 
@@ -178,11 +181,22 @@ gulp.task('css', ['sass'], function() {
 
 gulp.task('copy', function() {
 
+	gulp.src([
+		paths.assets.src + '*.*'
+	], {base: paths.assets.src})
+	.pipe(gulp.dest(basePaths.dest));
+
 	return gulp.src([
-			resources_assets + '**/*',
-			'!'+ resources_assets + '{images,images/**,sass,sass/**,scripts,scripts/**}'
-		], {base: resources_root})
-		.pipe(gulp.dest(public_root));
+				paths.assets.src + '**/*',
+				'!' + paths.assets.src + '*.*',
+				'!' + paths.images.src,
+				'!' + paths.images.src + '**',
+				'!' + paths.scripts.src,
+				'!' + paths.scripts.src + '**',
+				'!' + paths.styles.src,
+				'!' + paths.styles.src + '**'
+			], {base: basePaths.src})
+			.pipe(gulp.dest(basePaths.dest));
 
 });
 
@@ -191,15 +205,15 @@ gulp.task('copy', function() {
     Images Compressor
 */ 
 
-gulp.task('img', function () {
+gulp.task('imgmin', function () {
 
-    return gulp.src([resources_assets + 'images/**/*.{gif,jpg,png,svg}'])
-        .pipe(imagemin({
+    return gulp.src([paths.images.src + '**/*.{gif,jpg,png,svg}'])
+        .pipe(plugins.imagemin({
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],
             use: [pngquant()]
         }))
-        .pipe(gulp.dest(public_images));
+        .pipe(gulp.dest(paths.images.dest));
 
 });
 

@@ -48,12 +48,16 @@ var vendorFiles = {
 */
 
 var paths = {
+    assets: {
+        src: basePaths.src + 'assets/',
+        dest: basePaths.dest + 'assets/'
+    },
     images: {
         src: basePaths.src + 'assets/images/',
         dest: basePaths.dest + 'assets/images/'
     },
     scripts: {
-        src: basePaths.src + 'assets/js/',
+        src: basePaths.src + 'assets/scripts/',
         dest: basePaths.dest + 'assets/js/'
     },
     styles: {
