@@ -39,15 +39,14 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
 
 Then, go into `compiler/config` folder and configure your project.
 
-Finally, run the setup command :
+Finally, run the node setup command :
 
 ```shell
 cd compiler
 npm install
-gulp setup
 ```
 
-Your project is ready to go !
+Project is ready to go !
 
 
 ## Usage
@@ -56,10 +55,8 @@ Your project is ready to go !
 # Full project compilation
 gulp
 
-# Update external libraries used for compilation
-gulp up
-
 # Clean destination folder
+# /!\ Don't use it if your destination folder contains other files than the ones generated /!\
 gulp clean
 
 # Detect errors, then compile and uglify all your scripts files including vendor config
@@ -79,10 +76,12 @@ gulp cp
 ```
 
 
-## What's included ?
+## What's already setup with the project starter ?
 
+* Javascript Task Runner : [Gulp](http://gulpjs.com)
+* Front-End Package manager : [Bower](http://bower.io)
 * Front-End Framework : [Foundation](http://foundation.zurb.com)
 * CSS Preprocessor : [Sass](http://sass-lang.com)
 * Sass Mixin Library : [Bourbon](http://bourbon.io)
-* Sass Conventions Guide : [Csstyle](http://www.csstyle.io) // Not supported by libsass
+* Sass Conventions Guide : [Csstyle](http://www.csstyle.io) `Not supported by libsass`
 * Templating Engine : [Nunjucks](https://mozilla.github.io/nunjucks/)
