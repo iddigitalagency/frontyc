@@ -1,13 +1,3 @@
-/node_modules/*
-/.sass-cache/*
-*.log
-
-/vendor/*
-!/vendor/empty
-
-/tmp/*
-!/tmp/empty
-
 /public/*
 !/public/empty
 

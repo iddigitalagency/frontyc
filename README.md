@@ -1,9 +1,9 @@
-#  [WIP] Front-starter
+#  [WIP] Front-compiler
 
-A boilerplate for static Html5 websites (Foundation, Sass, Bourbon, Csstyle, Gulp, Bower, Nunjucks).
+Boilerplate designed with [Gulp](http://gulpjs.com). Fully-configurable resources compilation and static website generator.
 
 
-## 1/ Devbox pre-requirements
+## Requirements
 
 * Node.js: https://nodejs.org
 * Gulp: `npm install -g gulp`
@@ -14,44 +14,68 @@ A boilerplate for static Html5 websites (Foundation, Sass, Bourbon, Csstyle, Gul
 * Sass Globbing Plugin: https://github.com/chriseppstein/sass-globbing
 
 
-## 2/ Devbox project setup
+## Installation
 
-1. Install node modules : `npm install`
-2. Install bower libraries : `bower install`
+First, copy `compiler` folder everywhere you want into your project. You can alternatively install it directly from composer:
 
+```json
+{
+    "repositories": [
+        {
+            "url": "https://github.com/maoosi/front-starter.git",
+            "type": "git"
+        }
+    ],
+    "require": {
+        "maoosi/front-starter": "master"
+    }
+}
+```
 
-## 3/ Project compilation
+Then, go into `compiler/config` folder and configure your project.
 
-* Manual compilation : `gulp`
-* Automatic compilation using gulp-watcher : `****`
+Finally, run the setup command :
 
+```shell
+cd compiler
+npm install
+gulp setup
+```
 
-## 4/ Application structure
-
-* `public\` : Public folder that will contains compiled files (www_root)
-* `tmp\` : Tmp folder used for compilation
-* `vendor\` : Vendor folder that contains external libraries (bower components)
-* `resources\` : Resources folder that contains source files (MVP structure)
-* `resources\assets\` : Contain all assets used by your application (refer to next section for more information)
-* `resources\views\` : Contain all web views required for each pages
-* `resources\views\layouts\` : Contain all the parent layouts (templates)
-* `resources\models\` : Contain all JSON data files used by Nunjucks
-
-
-## 5/ Automated tasks (using Gulp)
-
-* Static pages generation using Nunjucks (HTML5 files from `resources\views\`)
-* Detect errors and potential problems in JavaScript code (JS files from `resources\assets\scripts\`)
-* Minification of JavaScript files (JS files from `resources\assets\scripts\`)
-* Dynamic images optimization (PNG, JPG, GIF and SVG from `resources\assets\images\`)
-* Sass compilation and minification (SCSS files from `resources\assets\sass\`)
-* Root files and folders copy (from `resources\assets\` folder)
+Your project is ready to go !
 
 
-## 6/ What's included ?
+## Usage
 
-* Javascript Task Runner : [Gulp](http://gulpjs.com)
-* Front-End Package manager : [Bower](http://bower.io)
+```shell
+/* Full project compilation */
+gulp
+
+/* Update external libraries used for compilation */
+gulp up
+
+/* Clean destination folder */
+gulp clean
+
+/* Detect errors, then compile and uglify all your scripts files including vendor config */
+gulp js
+
+/* Compile and minify all your styles files using sass and including vendor config */
+gulp css
+
+/* Compress all your images files {gif, jpg, png, svg} */
+gulp img
+
+/* If set in your config file, compile all your template files into static html using nunjucks and json models */
+gulp tpl
+
+/* Copy all other files you may include in your resources folder */
+gulp cp
+```
+
+
+## What's included ?
+
 * Front-End Framework : [Foundation](http://foundation.zurb.com)
 * CSS Preprocessor : [Sass](http://sass-lang.com)
 * Sass Mixin Library : [Bourbon](http://bourbon.io)
