@@ -1,4 +1,6 @@
 /public/*
 !/public/empty
 
+/vendor/bower/*
+
 *.DS_Store

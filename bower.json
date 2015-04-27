@@ -1,5 +1,5 @@
 {
-  "name": "maoosi.static-starter",
+  "name": "maoosi.front-starter",
   "dependencies": {
     "foundation": "~5.4.7",
     "bourbon": "~4.2.1",

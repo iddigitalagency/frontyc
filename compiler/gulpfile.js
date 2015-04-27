@@ -1,25 +1,20 @@
-/*
-    Config File
-*/
-var cfgFile = './gulpconfig.js';
-
 
 /*
-    Gulp Project Config Loading
+    Configuration loading
 */
 
-var cfg = require(cfgFile);
-var basePaths = cfg.basePaths;
-var vendorFiles = cfg.vendorFiles;
-var paths = cfg.paths;
-var useRubySass = true;
+var compilerOpt = require('./config/compiler.js').compilerOpt;
+var basePaths = require('./config/paths.js').basePaths;
+var paths = require('./config/paths.js').paths;
+var vendorFiles = require('./config/vendor.js').vendorFiles;
+var nunjucksOpt = require('./config/nunjucks.js').nunjucksOpt;
 
 
 /*
     Gulp Required Functions
 */
 
-var func = require('./gulpfunc.js');
+var func = require('./libs/gulpfunc.js');
 
 
 /*
@@ -63,30 +58,6 @@ gulp.task('clean', function(cb) {
 		basePaths.dest +'**/*',
 		'!'+ basePaths.dest +'empty'
 	], cb);
-
-});
-
-
-/*
-	Project Reset (bower_components)
-*/
-
-gulp.task('reset', function(cb) {
-
-	return remove([
-		basePaths.bower
-	], cb);
-
-});
-
-
-/*
-    Project Setup (public folder / bower_components / node_modules)
-*/
-
-gulp.task('setup', function(cb) {
-
-	return bower();
 
 });
 
@@ -153,7 +124,7 @@ gulp.task('oldjs', ['jshint'], function() {
 
 gulp.task('sass', function() {
 
-	if (useRubySass) {
+	if (compilerOpt.useRubySass) {
 
 		return plugins.rubySass(paths.styles.src + 'libraries.scss', {require: 'sass-globbing', loadPath: paths.styles.src})
 			    .on('error', function(err){
