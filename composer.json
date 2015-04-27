@@ -7,6 +7,5 @@
             "email": "hello@sylvainsimao.fr"
         }
     ],
-    "minimum-stability": "dev",
     "require": {}
 }
