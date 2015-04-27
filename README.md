@@ -48,28 +48,28 @@ Your project is ready to go !
 ## Usage
 
 ```shell
-/* Full project compilation */
+# Full project compilation
 gulp
 
-/* Update external libraries used for compilation */
+# Update external libraries used for compilation
 gulp up
 
-/* Clean destination folder */
+# Clean destination folder
 gulp clean
 
-/* Detect errors, then compile and uglify all your scripts files including vendor config */
+# Detect errors, then compile and uglify all your scripts files including vendor config
 gulp js
 
-/* Compile and minify all your styles files using sass and including vendor config */
+# Compile and minify all your styles files using sass and including vendor config
 gulp css
 
-/* Compress all your images files {gif, jpg, png, svg} */
+# Compress all your images files {gif, jpg, png, svg}
 gulp img
 
-/* If set in your config file, compile all your template files into static html using nunjucks and json models */
+# If set in your config file, compile all your template files into static html using nunjucks and json models
 gulp tpl
 
-/* Copy all other files you may include in your resources folder */
+# Copy all other files you may include in your resources folder
 gulp cp
 ```
 
