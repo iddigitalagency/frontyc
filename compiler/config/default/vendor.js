@@ -6,10 +6,10 @@ var vendorFiles = {
     /* Styles vendor list example */
     styles: {
         'app.css': [
-            basePaths.vendor + 'bla/bla.css'
+            basePaths.vendor + 'test/test.css'
         ],
         'test.css' : [
-            basePaths.vendor + 'bla/bla.css'
+            basePaths.vendor + 'test/test.css'
         ]
     },
 
