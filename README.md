@@ -30,7 +30,7 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
             "type": "package",
             "package": {
                 "name": "maoosi/front-compiler",
-                "version": "0.0",
+                "version": "0.0.2",
                 "source": {
                     "url": "https://github.com/maoosi/front-compiler.git",
                     "type": "git",
@@ -40,12 +40,14 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
         }
     ],
     "require": {
-    	"maoosi/front-compiler": "0.0.*"
+    	"maoosi/front-compiler": "0.0.2"
 	}
 }
 ```
 
 Then, go into `compiler/config/default/` folder and copy all config files to `compiler/config/`. Configure your project by editing copied files.
+
+> You can also change the config folder location by changing `var configPath = './config/';` (line 6 of `compiler/gulpfile.js`).
 
 Finally, run the node setup command :
 

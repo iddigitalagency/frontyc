@@ -1,13 +1,20 @@
 
 /*
+    Config folder
+*/
+
+var configPath = './config/';
+
+
+/*
     Configuration loading
 */
 
-var compilerOpt = require('./config/compiler.js').compilerOpt;
-var basePaths = require('./config/paths.js').basePaths;
-var paths = require('./config/paths.js').paths;
-var vendorFiles = require('./config/vendor.js').vendorFiles;
-var nunjucksOpt = require('./config/nunjucks.js').nunjucksOpt;
+var compilerOpt = require(configPath + 'compiler.js').compilerOpt;
+var basePaths = require(configPath + 'paths.js').basePaths;
+var paths = require(configPath + 'paths.js').paths;
+var vendorFiles = require(configPath + 'vendor.js').vendorFiles;
+var nunjucksOpt = require(configPath + 'nunjucks.js').nunjucksOpt;
 
 
 /*
