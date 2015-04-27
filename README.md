@@ -27,12 +27,12 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
 {
     "repositories": [
         {
-            "url": "https://github.com/maoosi/front-starter.git",
+            "url": "https://github.com/maoosi/front-compiler.git",
             "type": "git"
         }
     ],
     "require": {
-        "maoosi/front-starter": "master"
+        "maoosi/front-compiler": "0.0.*"
     }
 }
 ```

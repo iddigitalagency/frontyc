@@ -1,6 +1,6 @@
 {
-  "name": "maoosi.front-starter",
-  "version": "1.0.0",
+  "name": "maoosi.front-compiler",
+  "version": "0.0.1",
   "private": true,
   "devDependencies": {
     "del": "^1.1.1",

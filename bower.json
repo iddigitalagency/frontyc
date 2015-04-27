@@ -1,5 +1,5 @@
 {
-  "name": "maoosi.front-starter",
+  "name": "maoosi.front-compiler",
   "dependencies": {
     "foundation": "~5.4.7",
     "bourbon": "~4.2.1",
