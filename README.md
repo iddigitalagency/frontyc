@@ -14,6 +14,11 @@ Boilerplate designed with [Gulp](http://gulpjs.com). Fully-configurable resource
 * Sass Globbing Plugin: https://github.com/chriseppstein/sass-globbing
 
 
+## Note
+
+`public`, `vendor` and `resources` folders are not required for your project. They are here only as a demo project starter.
+
+
 ## Installation
 
 First, copy `compiler` folder everywhere you want into your project. You can alternatively install it directly from composer:
