@@ -25,15 +25,23 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
 
 ```json
 {
-    "repositories": [
+	"repositories": [
         {
-            "url": "https://github.com/maoosi/front-compiler.git",
-            "type": "git"
+            "type": "package",
+            "package": {
+                "name": "maoosi/front-compiler",
+                "version": "0.0",
+                "source": {
+                    "url": "https://github.com/maoosi/front-compiler.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
         }
     ],
     "require": {
-        "maoosi/front-compiler": "0.0.*"
-    }
+    	"maoosi/front-compiler": "0.0.*"
+	}
 }
 ```
 
