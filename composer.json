@@ -1,0 +1,11 @@
+{
+    "name": "maoosi/front-compiler",
+    "description": "Boilerplate designed with Gulp. Fully-configurable resources compilation and static website generator.",
+    "authors": [
+        {
+            "name": "maoosi",
+            "email": "hello@sylvainsimao.fr"
+        }
+    ],
+    "require": {}
+}
