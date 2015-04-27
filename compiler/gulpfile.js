@@ -14,7 +14,7 @@ var nunjucksOpt = require('./config/nunjucks.js').nunjucksOpt;
     Gulp Required Functions
 */
 
-var func = require('./libs/gulpfunc.js');
+var func = require('./libs/functions.js');
 
 
 /*
@@ -52,12 +52,12 @@ var changeEvent = function(evt) {
     Project Cleaner (destination folder)
 */
 
-gulp.task('clean', function(cb) {
+gulp.task('clean', function() {
 
 	return remove([
 		basePaths.dest +'**/*',
 		'!'+ basePaths.dest +'empty'
-	], cb);
+	], {force: true});
 
 });
 
@@ -225,21 +225,24 @@ gulp.task('img', function () {
 gulp.task('tpl', function() {
 
 	return gulp.src([
-			resources_views + '*.html',
-			'!' + resources_views + 'layouts'
+			paths.nunjucks.src + '*' + nunjucksOpt.tplFormat,
+			'!' + paths.nunjucks.src + 'layouts'
 		])
-		.pipe(data(function(file) {
+		.pipe(plugins.data(function(file) {
 
-			var data = gulp.src(resources_models + '**/*.json')
-				.pipe();	
-			util.log( require(resources_models + path.basename( file.path, '.html' ) + '.json') );
+			var data = gulp.src(paths.nunjucks.data + '**/*.json')
+						.pipe(plugins.concat(paths.nunjucks.data + 'compiled.json'));
 
-			return require(resources_models + path.basename( file.path, '.html' ) + '.json');
+			/*var data  = require('main.json');
+			var data .= require(paths.nunjucks.data + path.basename( file.path, nunjucksOpt.tplFormat ) + '.json');*/
+			
+			console.log( data );
+			//return require(paths.nunjucks.data + path.basename( file.path, nunjucksOpt.tplFormat ) + '.json');
 		}))
-		.pipe(nunjucks({
-			searchPaths: [resources_views]
+		.pipe(plugins.nunjucksHtml({
+			searchPaths: [paths.nunjucks.src]
 		}))
-		.pipe(gulp.dest(public_root));
+		.pipe(gulp.dest(paths.nunjucks.dest));
 
 });
 
@@ -248,4 +251,4 @@ gulp.task('tpl', function() {
     Gulp Default Task
 */ 
 
-gulp.task('default', ['js', 'css', 'img', 'cp', 'tpl'], function() { });
+gulp.task('default', ['js', 'css', 'img', 'cp', 'tpl'], function() {});
