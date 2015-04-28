@@ -52,9 +52,8 @@ Project is ready to go !
 # Full project compilation
 gulp
 
-# Clean destination folder
-# /!\ Don't use it if your destination folder contains other files than the ones generated /!\
-gulp clean
+# Launch files watcher
+gulp watch
 
 # Detect errors, then compile and uglify all your scripts files including vendor config
 gulp js
@@ -70,6 +69,10 @@ gulp tpl
 
 # Copy all other files you may include in your resources folder
 gulp cp
+
+# Clean destination folder
+# /!\ Don't use it if your destination folder contains other files than the ones generated /!\
+gulp clean
 ```
 
 
