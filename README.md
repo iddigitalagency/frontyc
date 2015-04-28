@@ -17,6 +17,7 @@ Boilerplate designed with [Gulp](http://gulpjs.com). Fully-configurable resource
 ## Note
 
 `public`, `vendor` and `resources` folders are not required for your project. They are here only as a demo project starter.
+If you want to use it as project starter, you will additionally need install the bower components by running `bower install` in your root folder. 
 
 
 ## Installation
@@ -39,7 +40,7 @@ Finally, run the node setup command :
 
 ```shell
 cd compiler
-npm install
+npm install # sudo npm install on linux
 ```
 
 Project is ready to go !
@@ -81,3 +82,9 @@ gulp cp
 * Sass Mixin Library : [Bourbon](http://bourbon.io)
 * Sass Conventions Guide : [Csstyle](http://www.csstyle.io) `Not supported by libsass`
 * Templating Engine : [Nunjucks](https://mozilla.github.io/nunjucks/)
+
+
+## Roadmap
+
+* Automated SVG sprites creation [reference](https://www.liquidlight.co.uk/blog/article/creating-svg-sprites-using-gulp-and-sass/)
+* Ability to export views directly into a particular Framework. Based on templates files and Nunjucks custom filters.

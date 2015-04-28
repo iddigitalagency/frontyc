@@ -21,7 +21,7 @@ var nunjucksOpt = require(configPath + 'nunjucks.js').nunjucksOpt;
     Gulp Required Functions
 */
 
-var func = require('./libs/functions.js');
+//var func = require('./libs/functions.js');
 
 
 /*
@@ -44,6 +44,7 @@ var path = require('path');
 var remove = require('del');
 var stylish = require('jshint-stylish');
 var console = plugins.util;
+var gulpif = plugins.if;
 
 
 /*
@@ -83,44 +84,46 @@ gulp.task('jshint', function() {
 
 
 /*
-    Javascript Generator
-*/ 
+    Javascript Concat
+*/
 
-gulp.task('js', ['jshint'], function() {
-	
-	// Adding vendors from config
-		var main_libs = [ paths.scripts.src + '**/*.js' ];
-		var vendor_list = vendorFiles.scripts;
-		
-		for (var dest_file in vendor_list) {
-			if (dest_file != 'default') {
-				var vendor_libs = collectLibraries(vendor_list, dest_file);
-				func.uglycat(vendor_libs, dest_file); // Concatenation & Uglifycation of current list
-			}
-			else main_libs = collectLibraries(vendor_list, dest_file, main_libs);
-		}
+gulp.task('concatjs', ['jshint'], function() {
 
-	// Concatenation & Uglifycation of main libs (app.js)
-		return func.uglycat(main_libs, 'app.js');
+	return gulp.src(paths.scripts.src + '**/*.js')
+		    .pipe(plugins.concat('app.js'))
+		    .pipe(gulp.dest(paths.scripts.dest));
 
 });
 
-gulp.task('oldjs', ['jshint'], function() {
 
-	// Adding vendors from config
-		var main_libs = [ paths.scripts.src + '**/*.js' ];
-		var vendor_list = vendorFiles.scripts;
-		
-		for (var dest_file in vendor_list) {
-			if (dest_file != 'default') {
-				var vendor_libs = collectLibraries(vendor_list, dest_file);
-				func.uglycat(vendor_libs, dest_file); // Concatenation & Uglifycation of current list
-			}
-			else main_libs = collectLibraries(vendor_list, dest_file, main_libs);
-		}
+/*
+    Javascript Generator
+*/ 
 
-	// Concatenation & Uglifycation of main libs (app.js)
-		return func.uglycat(main_libs, 'app.js');
+gulp.task('js', ['concatjs'], function() {
+	
+	var vendorList = vendorFiles.scripts;
+	vendorList['app.js'].unshift(paths.scripts.dest + 'app.js');
+
+	for (var destFile in vendorList) {
+		var destFileMin = destFile.replace('.js', '.min.js');
+		var requireUglify = ( destFile.search('.js') == -1 || destFile.search('.min.js') != -1 ) ? false : true;
+
+		console.log( 'Creating \'' + console.colors.cyan(destFile) + '\'' );
+		if (requireUglify) console.log( 'Uglifying \'' + console.colors.yellow(destFileMin) + '\'' );
+
+		for (var n = 0, len = vendorList[destFile].length; n < len; ++n)
+			console.log( console.colors.grey(' |--> ' + vendorList[destFile][n]) );
+
+		var stream = gulp.src(vendorList[destFile])
+					.pipe(plugins.concat(destFile))
+				    .pipe(gulp.dest(paths.scripts.dest))
+				    .pipe(gulpif(requireUglify, plugins.rename(destFileMin)))
+				    .pipe(gulpif(requireUglify, plugins.uglify()))
+				    .pipe(gulpif(requireUglify, gulp.dest(paths.scripts.dest)));
+	}
+
+	return stream;
 
 });
 
@@ -159,25 +162,29 @@ gulp.task('sass', function() {
 */ 
 
 gulp.task('css', ['sass'], function() {
+	
+	var vendorList = vendorFiles.styles;
+	vendorList['app.css'].unshift(paths.styles.dest + 'app.css');
 
-	// Adding vendors from config
-		var main_libs = [ public_styles + 'app.css' ];
-		var vendor_list = config.styles_vendor;
-		
-		for (var dest_file in vendor_list)
-		{
-			if (dest_file != 'default')
-			{
-				var vendor_libs = collectLibraries(vendor_list, dest_file);
+	for (var destFile in vendorList) {
+		var destFileMin = destFile.replace('.css', '.min.css');
+		var requireMinify = ( destFile.search('.css') == -1 || destFile.search('.min.css') != -1 ) ? false : true;
 
-				// Concatenation & Minification of current list
-					minicat(vendor_libs, dest_file);
-			}
-			else main_libs = collectLibraries(vendor_list, dest_file, main_libs);
-		}
+		console.log( 'Creating \'' + console.colors.cyan(destFile) + '\'' );
+		if (requireMinify) console.log( 'Minifying \'' + console.colors.yellow(destFileMin) + '\'' );
 
-		// Concatenation & Minification of main libs (app.css)
-		return minicat(main_libs, 'app.css');
+		for (var n = 0, len = vendorList[destFile].length; n < len; ++n)
+			console.log( console.colors.grey(' |--> ' + vendorList[destFile][n]) );
+
+		var stream = gulp.src(vendorList[destFile])
+					.pipe(plugins.concat(destFile))
+				    .pipe(gulp.dest(paths.styles.dest))
+				    .pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
+				    .pipe(gulpif(requireMinify, plugins.minifyCss()))
+				    .pipe(gulpif(requireMinify, gulp.dest(paths.styles.dest)));
+	}
+
+	return stream;
 
 });
 
@@ -229,7 +236,7 @@ gulp.task('img', function () {
 	Data Reader From Json Model Files
 */
 
-gulp.task('get-data-from-model', function() {
+gulp.task('getdatafrommodel', function() {
 
 	return gulp.src(paths.nunjucks.data + '**/*.json')
 			.pipe(plugins.jsoncombine('compiled_data.json', function(data){
@@ -244,7 +251,7 @@ gulp.task('get-data-from-model', function() {
     Nunjucks Html Compilator
 */ 
 
-gulp.task('nunjucks-compilator', ['get-data-from-model'], function() {
+gulp.task('nunjucks', ['getdatafrommodel'], function() {
 
 	return gulp.src([
 				paths.nunjucks.src + '*' + nunjucksOpt.tplFormat,
@@ -265,7 +272,7 @@ gulp.task('nunjucks-compilator', ['get-data-from-model'], function() {
     Nunjucks Html Compilator Including Data
 */ 
 
-gulp.task('tpl', ['nunjucks-compilator'], function() {
+gulp.task('tpl', ['nunjucks'], function() {
 
 	return remove(paths.nunjucks.data + 'compiled_data.json', {force: true});
 
