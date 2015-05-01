@@ -1,5 +1,7 @@
 
+/* Project root directory: relative to `compiler/` folder */
 var root_dir = '../';
+
 
 var basePaths = {
 
@@ -10,6 +12,7 @@ var basePaths = {
 
 };
 
+
 var paths = {
 
     assets: {
@@ -17,16 +20,19 @@ var paths = {
         dest: basePaths.dest + 'assets/'
     },
 
+    /* Must be inside assets folder src/dest defined above */
     images: {
         src: basePaths.src + 'assets/images/',
         dest: basePaths.dest + 'assets/images/'
     },
 
+    /* Must be inside assets folder src/dest defined above */
     scripts: {
         src: basePaths.src + 'assets/scripts/',
         dest: basePaths.dest + 'assets/js/'
     },
 
+    /* Must be inside assets folder src/dest defined above */
     styles: {
         src: basePaths.src + 'assets/sass/',
         dest: basePaths.dest + 'assets/css/'
@@ -38,7 +44,9 @@ var paths = {
         src: basePaths.src + 'views/',
         dest: basePaths.dest,
     }
+    
 };
+
 
 exports.basePaths = basePaths;
 exports.paths = paths;

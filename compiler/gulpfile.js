@@ -11,10 +11,11 @@ var configPath = './config/';
 */
 
 var compilerOpt = require(configPath + 'compiler.js').compilerOpt;
-var basePaths = require(configPath + 'paths.js').basePaths;
-var paths = require(configPath + 'paths.js').paths;
 var vendorFiles = require(configPath + 'vendor.js').vendorFiles;
 var nunjucksOpt = require(configPath + 'nunjucks.js').nunjucksOpt;
+var projectPaths = require(configPath + 'paths.js');
+var basePaths = projectPaths.basePaths;
+var paths = projectPaths.paths;
 
 
 /*
@@ -55,7 +56,7 @@ var changeEvent = function(evt) {
     console.log('File', console.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '')), 'was', console.colors.magenta(evt.type));
     
     if (evt.type == 'deleted') {
-    	//console.log(evt.path);
+    	console.log('debug::evt.path - ' + evt.path);
     	//remove(basePaths.src, {force: true})
     }
 };
@@ -294,7 +295,7 @@ gulp.task('tpl', ['nunjucks'], function() {
     Watcher
 */ 
 
-gulp.task('watch', /*['js', 'css', 'img', 'cp', 'tpl'],*/ function(){
+gulp.task('watch', ['default'], function(){
 
     gulp.watch(paths.styles.src + '**/**', ['css']).on('change', function(evt) {
         changeEvent(evt);
