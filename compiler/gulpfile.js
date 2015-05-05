@@ -210,11 +210,11 @@ gulp.task('cp', function() {
 				paths.assets.src + '**/*',
 				'!' + paths.assets.src + '*.*',
 				'!' + paths.images.src,
-				'!' + paths.images.src + '**',
+				'!' + paths.images.src + '*',
 				'!' + paths.scripts.src,
-				'!' + paths.scripts.src + '**',
+				'!' + paths.scripts.src + '*',
 				'!' + paths.styles.src,
-				'!' + paths.styles.src + '**'
+				'!' + paths.styles.src + '*'
 			], {base: basePaths.src})
 			.pipe(gulp.dest(basePaths.dest));
 
@@ -242,15 +242,16 @@ gulp.task('img', function () {
 	Data Reader From Json Model Files
 */
 
-gulp.task('getdatafrommodel', function() {
+gulp.task('getdatafrommodel', function(cb) {
 
-	if (compilerOpt.useNunjucks) {
-		return gulp.src(paths.nunjucks.data + '**/*.json')
+	//if (compilerOpt.useNunjucks) {
+		var stream = gulp.src(paths.nunjucks.data + '**/*.json')
 				.pipe(plugins.jsoncombine('compiled_data.json', function(data){
 					return new Buffer(JSON.stringify(data));
 				}))
 				.pipe(gulp.dest(paths.nunjucks.data));
-	}
+		return stream;
+	//}
 
 });
 
@@ -259,10 +260,10 @@ gulp.task('getdatafrommodel', function() {
     Nunjucks Html Compilator
 */ 
 
-gulp.task('nunjucks', ['getdatafrommodel'], function() {
+gulp.task('nunjucks', ['getdatafrommodel'], function(cb) {
 
-	if (compilerOpt.useNunjucks) {
-		return gulp.src([
+	//if (compilerOpt.useNunjucks) {
+		var stream = gulp.src([
 					paths.nunjucks.src + '*' + nunjucksOpt.tplFormat,
 					'!' + paths.nunjucks.src + 'layouts'
 				])
@@ -273,7 +274,8 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 					searchPaths: [paths.nunjucks.src]
 				}))
 				.pipe(gulp.dest(paths.nunjucks.dest));
-	}
+		return stream;
+	//}
 
 });
 
@@ -282,11 +284,11 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
     Nunjucks Html Compilator Including Data
 */ 
 
-gulp.task('tpl', ['nunjucks'], function() {
+gulp.task('tpl', ['nunjucks'], function(cb) {
 
-	if (compilerOpt.useNunjucks) {
-		return remove(paths.nunjucks.data + 'compiled_data.json', {force: true});
-	}
+	//if (compilerOpt.useNunjucks) {
+		remove(paths.nunjucks.data + 'compiled_data.json', {force: true}, cb);
+	//}
 
 });
 
@@ -295,24 +297,24 @@ gulp.task('tpl', ['nunjucks'], function() {
     Watcher
 */ 
 
-gulp.task('watch', ['default'], function(){
+gulp.task('watch', /*['default'],*/ function(){
 
-    gulp.watch(paths.styles.src + '**/**', ['css']).on('change', function(evt) {
+    gulp.watch(paths.styles.src + '**/*', ['css']).on('change', function(evt) {
         changeEvent(evt);
     });
 
-    gulp.watch(paths.scripts.src + '**/**', ['js']).on('change', function(evt) {
+    gulp.watch(paths.scripts.src + '**/*', ['js']).on('change', function(evt) {
         changeEvent(evt);
     });
 
-    gulp.watch(paths.images.src + '**/**', ['img']).on('change', function(evt) {
+    gulp.watch(paths.images.src + '**/*', ['img']).on('change', function(evt) {
         changeEvent(evt);
     });
 
     if (compilerOpt.useNunjucks) {
 	    gulp.watch([
-			paths.nunjucks.src + '**/**',
-			paths.nunjucks.data + '**/**'
+			paths.nunjucks.src + '**/*',
+			paths.nunjucks.data + '**/*'
 		], ['tpl']).on('change', function(evt) {
 	        changeEvent(evt);
 	    });
@@ -322,11 +324,11 @@ gulp.task('watch', ['default'], function(){
 		paths.assets.src + '**/*',
 		'!' + paths.assets.src + '*.*',
 		'!' + paths.images.src,
-		'!' + paths.images.src + '**',
+		'!' + paths.images.src + '*',
 		'!' + paths.scripts.src,
-		'!' + paths.scripts.src + '**',
+		'!' + paths.scripts.src + '*',
 		'!' + paths.styles.src,
-		'!' + paths.styles.src + '**'
+		'!' + paths.styles.src + '*'
 	], ['cp']).on('change', function(evt) {
         changeEvent(evt);
     });
