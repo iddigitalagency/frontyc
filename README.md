@@ -76,6 +76,21 @@ gulp clean
 ```
 
 
+## Unix alias
+
+When you install the compiler using composer, it could be painful to run command from the compiler folder. To facilitate this, here's an alias that you can easily set up on unix:
+
+```shell
+alias front='function _front(){ (cd ./vendor/maoosi/front-compiler/compiler/;"$@") };_front'
+```
+
+Now you can just run:
+
+```shell
+front gulp
+```
+
+
 ## What's already setup with the project starter ?
 
 * Javascript Task Runner : [Gulp](http://gulpjs.com)
@@ -85,9 +100,3 @@ gulp clean
 * Sass Mixin Library : [Bourbon](http://bourbon.io)
 * Sass Conventions Guide : [Csstyle](http://www.csstyle.io) `Not supported by libsass`
 * Templating Engine : [Nunjucks](https://mozilla.github.io/nunjucks/)
-
-
-## Roadmap
-
-* Automated SVG sprites creation [reference](https://www.liquidlight.co.uk/blog/article/creating-svg-sprites-using-gulp-and-sass/)
-* Ability to export views directly into a particular Framework. Based on templates files and Nunjucks custom filters.
