@@ -46,6 +46,7 @@ var remove = require('del');
 var stylish = require('jshint-stylish');
 var console = plugins.util;
 var gulpif = plugins.if;
+var fs = require('fs');
 
 
 /*
@@ -244,14 +245,13 @@ gulp.task('img', function () {
 
 gulp.task('getdatafrommodel', function(cb) {
 
-	//if (compilerOpt.useNunjucks) {
-		var stream = gulp.src(paths.nunjucks.data + '**/*.json')
+	if (compilerOpt.useNunjucks) {
+		return gulp.src([paths.nunjucks.data + '**/*.json', '!' + paths.nunjucks.data + 'compiled_data.json'])
 				.pipe(plugins.jsoncombine('compiled_data.json', function(data){
 					return new Buffer(JSON.stringify(data));
 				}))
 				.pipe(gulp.dest(paths.nunjucks.data));
-		return stream;
-	//}
+	}
 
 });
 
@@ -262,20 +262,20 @@ gulp.task('getdatafrommodel', function(cb) {
 
 gulp.task('nunjucks', ['getdatafrommodel'], function(cb) {
 
-	//if (compilerOpt.useNunjucks) {
-		var stream = gulp.src([
+	if (compilerOpt.useNunjucks) {
+		return gulp.src([
 					paths.nunjucks.src + '*' + nunjucksOpt.tplFormat,
 					'!' + paths.nunjucks.src + 'layouts'
 				])
 				.pipe(plugins.data(function(file) {
-		  			return require(paths.nunjucks.data + 'compiled_data.json');
+					var data = fs.readFileSync(paths.nunjucks.data + 'compiled_data.json', 'utf-8');
+		  			return JSON.parse(data);
 				}))
 				.pipe(plugins.nunjucksHtml({
 					searchPaths: [paths.nunjucks.src]
 				}))
 				.pipe(gulp.dest(paths.nunjucks.dest));
-		return stream;
-	//}
+	}	
 
 });
 
@@ -286,9 +286,9 @@ gulp.task('nunjucks', ['getdatafrommodel'], function(cb) {
 
 gulp.task('tpl', ['nunjucks'], function(cb) {
 
-	//if (compilerOpt.useNunjucks) {
+	if (compilerOpt.useNunjucks) {
 		remove(paths.nunjucks.data + 'compiled_data.json', {force: true}, cb);
-	//}
+	}
 
 });
 
