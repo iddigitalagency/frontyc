@@ -47,6 +47,7 @@ var stylish = require('jshint-stylish');
 var console = plugins.util;
 var gulpif = plugins.if;
 var fs = require('fs');
+var tmpjsondata = 'compiled_data.json';
 
 
 /*
@@ -243,11 +244,11 @@ gulp.task('img', function () {
 	Data Reader From Json Model Files
 */
 
-gulp.task('getdatafrommodel', function(cb) {
+gulp.task('getdatafrommodel', function() {
 
 	if (compilerOpt.useNunjucks) {
 		return gulp.src([paths.nunjucks.data + '**/*.json', '!' + paths.nunjucks.data + 'compiled_data.json'])
-				.pipe(plugins.jsoncombine('compiled_data.json', function(data){
+				.pipe(plugins.jsoncombine(tmpjsondata, function(data){
 					return new Buffer(JSON.stringify(data));
 				}))
 				.pipe(gulp.dest(paths.nunjucks.data));
@@ -260,7 +261,7 @@ gulp.task('getdatafrommodel', function(cb) {
     Nunjucks Html Compilator
 */ 
 
-gulp.task('nunjucks', ['getdatafrommodel'], function(cb) {
+gulp.task('nunjucks', ['getdatafrommodel'], function() {
 
 	if (compilerOpt.useNunjucks) {
 		return gulp.src([
@@ -268,12 +269,14 @@ gulp.task('nunjucks', ['getdatafrommodel'], function(cb) {
 					'!' + paths.nunjucks.src + 'layouts'
 				])
 				.pipe(plugins.data(function(file) {
-					var data = fs.readFileSync(paths.nunjucks.data + 'compiled_data.json', 'utf-8');
-		  			return JSON.parse(data);
+					return JSON.parse(fs.readFileSync(paths.nunjucks.data + tmpjsondata, 'utf-8'));
 				}))
 				.pipe(plugins.nunjucksHtml({
 					searchPaths: [paths.nunjucks.src]
 				}))
+				.on('error', function(err) {
+					console.log(err);// err is the error thrown by the Nunjucks compiler.
+				})
 				.pipe(gulp.dest(paths.nunjucks.dest));
 	}	
 
@@ -287,7 +290,7 @@ gulp.task('nunjucks', ['getdatafrommodel'], function(cb) {
 gulp.task('tpl', ['nunjucks'], function(cb) {
 
 	if (compilerOpt.useNunjucks) {
-		remove(paths.nunjucks.data + 'compiled_data.json', {force: true}, cb);
+		remove(paths.nunjucks.data + tmpjsondata, {force: true}, cb);
 	}
 
 });
@@ -297,7 +300,7 @@ gulp.task('tpl', ['nunjucks'], function(cb) {
     Watcher
 */ 
 
-gulp.task('watch', /*['default'],*/ function(){
+gulp.task('watch', ['default'], function(){
 
     gulp.watch(paths.styles.src + '**/*', ['css']).on('change', function(evt) {
         changeEvent(evt);
@@ -314,7 +317,8 @@ gulp.task('watch', /*['default'],*/ function(){
     if (compilerOpt.useNunjucks) {
 	    gulp.watch([
 			paths.nunjucks.src + '**/*',
-			paths.nunjucks.data + '**/*'
+			paths.nunjucks.data + '**/*',
+			'!' + paths.nunjucks.data + tmpjsondata
 		], ['tpl']).on('change', function(evt) {
 	        changeEvent(evt);
 	    });
