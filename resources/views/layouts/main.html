@@ -13,13 +13,13 @@
     <title>{{ main.title }}</title>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="assets/css/app.min.css">
+    <link rel="stylesheet" href="{{ 'css/app.min.cs' | asset }}">
 
     <!-- Modernizr -->
-    <script src="assets/js/modernizr.min.js"></script>
+    <script src="{{ 'js/modernizr.min.js' | asset }}"></script>
 
     <!-- jQuery -->
-    <script src="assets/js/jquery.min.js"></script>
+    <script src="{{ 'js/jquery.min.js' | asset }}"></script>
 
 </head>
 <body id="csstyle">
@@ -30,7 +30,7 @@
     </main>
     
     <!-- Application scripts -->
-    <script src="assets/js/app.min.js"></script>
+    <script src="{{ 'js/app.min.js' | asset }}"></script>
 
 </body>
 </html>

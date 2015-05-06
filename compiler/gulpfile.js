@@ -45,6 +45,7 @@ var path = require('path');
 var remove = require('del');
 var stylish = require('jshint-stylish');
 var console = plugins.util;
+var replace = plugins.replace;
 var gulpif = plugins.if;
 var fs = require('fs');
 var tmpjsondata = 'compiled_data.json';
@@ -264,15 +265,26 @@ gulp.task('getdatafrommodel', function() {
 gulp.task('nunjucks', ['getdatafrommodel'], function() {
 
 	if (compilerOpt.useNunjucks) {
+
+		var relativeAssetsPath = 'assets/';
+
 		return gulp.src([
 					paths.nunjucks.src + '*' + nunjucksOpt.tplFormat,
 					'!' + paths.nunjucks.src + 'layouts'
 				])
+				/*.pipe(replace(/\{\{ asset\([^\'](.*)[^\']\) \}\}/g, relativeAssetsPath + '$1'))*/
 				.pipe(plugins.data(function(file) {
-					return JSON.parse(fs.readFileSync(paths.nunjucks.data + tmpjsondata, 'utf-8'));
+					var flux = fs.readFileSync(paths.nunjucks.data + tmpjsondata, 'utf-8');
+					return JSON.parse(flux);
 				}))
 				.pipe(plugins.nunjucksHtml({
-					searchPaths: [paths.nunjucks.src]
+					searchPaths: [paths.nunjucks.src],
+					setUp: function(env) {
+						env.addFilter('asset', function(path) {
+							return relativeAssetsPath + path;
+						});
+						return env;
+					}
 				}))
 				.on('error', function(err) {
 					console.log(err);// err is the error thrown by the Nunjucks compiler.
@@ -281,6 +293,9 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 	}	
 
 });
+
+
+
 
 
 /*
