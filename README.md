@@ -34,7 +34,19 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
 
 Then, go into `compiler/config/default/` folder and copy all config files to `compiler/config/`. Configure your project by editing copied files.
 
-> You can also change the config folder location by changing `var configPath = './config/';` (line 6 of `compiler/gulpfile.js`).
+> You can also change the config folder location by creating `compiler/config/external.js`
+> ```javascript
+/*
+    Config folder
+*/
+
+var cfg = {
+	configPath : '../../../../application/config/front-compiler/'
+};
+
+
+exports.cfg = cfg;
+```
 
 Finally, run the node setup command :
 

@@ -3,7 +3,13 @@
     Config folder
 */
 
-var configPath = './config/';
+var fs = require('fs');
+
+if (fs.existsSync('./config/external.js')) {
+	var configPath = require('./config/external.js').cfg.configPath;
+} else {
+	var configPath = './config/';
+}
 
 
 /*
@@ -47,7 +53,6 @@ var stylish = require('jshint-stylish');
 var console = plugins.util;
 var replace = plugins.replace;
 var gulpif = plugins.if;
-var fs = require('fs');
 var tmpjsondata = 'compiled_data.json';
 
 
@@ -205,13 +210,13 @@ gulp.task('css', ['sass'], function() {
 gulp.task('cp', function() {
 
 	gulp.src([
-		paths.assets.src + '*.*'
-	], {base: paths.assets.src})
+		basePaths.assets.src + '*.*'
+	], {base: basePaths.assets.src})
 	.pipe(gulp.dest(basePaths.dest));
 
 	return gulp.src([
-				paths.assets.src + '**/*',
-				'!' + paths.assets.src + '*.*',
+				basePaths.assets.src + '**/*',
+				'!' + basePaths.assets.src + '*.*',
 				'!' + paths.images.src,
 				'!' + paths.images.src + '*',
 				'!' + paths.scripts.src,
@@ -295,9 +300,6 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 });
 
 
-
-
-
 /*
     Nunjucks Html Compilator Including Data
 */ 
@@ -306,6 +308,63 @@ gulp.task('tpl', ['nunjucks'], function(cb) {
 
 	if (compilerOpt.useNunjucks) {
 		remove(paths.nunjucks.data + tmpjsondata, {force: true}, cb);
+	}
+
+});
+
+
+/*
+    MyID CMS Converter
+*/ 
+
+gulp.task('myid', function() {
+
+	var argv = require('yargs')
+			    .usage('Usage: $0 --file [path]')
+			    .demand(['file'])
+			    .argv;
+
+
+	if (argv.file != undefined && argv.file !== true)
+	{
+		var fileToConvert = paths.nunjucks.src + argv.file;
+
+		if (fs.existsSync(fileToConvert))
+		{
+			/** Config Required **/
+				var convertDest = basePaths.dest + 'application/views/generated/';
+				var extension = '.php';
+				var mainTemplateSrc = 'layouts/main.html';
+				var mainTemplateDest = 'template';
+				var replaceThis = [
+					[ '{% block content %}{% endblock %}', '<?php print $content ?>' ],
+					[ /\{\% block content \%\}([\s\S]*)\{\% endblock \%\}/g, '<!-- Content :: Template injected -->'+'$1' ],
+					[ /\{\{ ([a-z]*)(?:\.([a-z]*)) \}\}/g, '<?= $$$1->$2 ?>' ],
+					[ /\{\{ ([a-z]*)(?:\.([a-z]*))(?:\.([a-z]*)) \}\}/g, '<?= $$$1->$2->$3 ?>' ],
+					[ /\{\{ ([a-z]*)(?:\.([a-z]*))(?:\.([a-z]*))(?:\.([a-z]*)) \}\}/g, '<?= $$$1->$2->$3->$4 ?>' ],
+					[ '$main->', '$template->' ],
+					[ '$'+ argv.file.replace(/\.[^/.]+$/, '') +'->', '$' ],
+					[ /\{\% extends (.*) \%\}(((\r*)(\n*))*)/g, '' ],
+					[ /\{\{ \'(.*)\' \| asset \}\}/g, '<?= site_url(\'assets/$1\')?>' ],
+					[ '</head>', "\t"+'<!-- myID -->'+"\n\t"+'<?php'+"\n\t\t"+'print $template->get_meta();'+"\n\t\t"+'print $template->get_css();'+"\n\t"+'?>'+"\n\n"+'</head>' ],
+					[ '</body>', "\t"+'<!-- myID -->'+"\n\t"+'<?php'+"\n\t\t"+'print $template->get_scripts();'+"\n\t\t"+'print $template->google_tracker();'+"\n\t"+'?>'+"\n\n"+'</body>' ]
+				];
+			/** Config Required **/
+
+			return 	gulp.src(fileToConvert)
+						.pipe(plugins.batchReplace(replaceThis))
+						.pipe(plugins.extReplace(extension))
+						.pipe(gulpif(argv.file == mainTemplateSrc, plugins.rename(mainTemplateDest + extension)))
+						.pipe(gulp.dest(convertDest));
+		}
+		else
+		{
+			console.log(console.colors.yellow('File '+ argv.file +' doesn\'t exist !'));
+		}
+	}
+	else
+	{
+		console.log(console.colors.yellow('Invalid argument --file !'));
 	}
 
 });
@@ -340,8 +399,8 @@ gulp.task('watch', ['default'], function(){
 	}
 
     gulp.watch([
-		paths.assets.src + '**/*',
-		'!' + paths.assets.src + '*.*',
+		basePaths.assets.src + '**/*',
+		'!' + basePaths.assets.src + '*.*',
 		'!' + paths.images.src,
 		'!' + paths.images.src + '*',
 		'!' + paths.scripts.src,

@@ -6,10 +6,12 @@
     "del": "^1.1.1",
     "event-stream": "^3.3.0",
     "gulp": "^3.8.11",
+    "gulp-batch-replace": "0.0.0",
     "gulp-bower": "0.0.10",
     "gulp-concat": "^2.5.2",
     "gulp-css-url-adjuster": "^0.2.3",
     "gulp-data": "^1.2.0",
+    "gulp-ext-replace": "^0.2.0",
     "gulp-if": "^1.2.5",
     "gulp-imagemin": "^2.2.1",
     "gulp-jshint": "^1.10.0",
@@ -27,6 +29,7 @@
     "gulp-wrap": "^0.11.0",
     "imagemin-pngquant": "^4.1.0",
     "jshint-stylish": "^1.0.1",
-    "path": "^0.11.14"
+    "path": "^0.11.14",
+    "yargs": "^3.8.0"
   }
 }
