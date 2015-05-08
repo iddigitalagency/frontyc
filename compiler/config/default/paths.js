@@ -1,41 +1,36 @@
 
-/* Project root directory: relative to `compiler/` folder */
 var root_dir = '../';
-
 
 var basePaths = {
 
     src: root_dir + 'resources/',
     dest: root_dir + 'public/',
+
     vendor: root_dir + 'vendor/',
-    bower: root_dir + './vendor/bower/'
+    bower: root_dir + './vendor/bower/',
+    
+    assets: {
+        src: root_dir + 'resources/assets/',
+        dest: root_dir + 'public/assets/'
+    }
 
 };
 
-
 var paths = {
 
-    assets: {
-        src: basePaths.src + 'assets/',
-        dest: basePaths.dest + 'assets/'
-    },
-
-    /* Must be inside assets folder src/dest defined above */
     images: {
-        src: basePaths.src + 'assets/images/',
-        dest: basePaths.dest + 'assets/images/'
+        src: basePaths.assets.src + 'images/',
+        dest: basePaths.assets.dest + 'images/'
     },
 
-    /* Must be inside assets folder src/dest defined above */
     scripts: {
-        src: basePaths.src + 'assets/scripts/',
-        dest: basePaths.dest + 'assets/js/'
+        src: basePaths.assets.src + 'scripts/',
+        dest: basePaths.assets.dest + 'js/'
     },
 
-    /* Must be inside assets folder src/dest defined above */
     styles: {
-        src: basePaths.src + 'assets/sass/',
-        dest: basePaths.dest + 'assets/css/'
+        src: basePaths.assets.src + 'sass/',
+        dest: basePaths.assets.dest + 'css/'
     },
 
     /* Used for Nunjucks templates compilation */
@@ -43,10 +38,9 @@ var paths = {
         data: basePaths.src + 'models/',
         src: basePaths.src + 'views/',
         dest: basePaths.dest,
+        assets: 'assets/'
     }
-    
 };
-
 
 exports.basePaths = basePaths;
 exports.paths = paths;

@@ -271,13 +271,10 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 
 	if (compilerOpt.useNunjucks) {
 
-		var relativeAssetsPath = 'assets/';
-
 		return gulp.src([
 					paths.nunjucks.src + '*' + nunjucksOpt.tplFormat,
 					'!' + paths.nunjucks.src + 'layouts'
 				])
-				/*.pipe(replace(/\{\{ asset\([^\'](.*)[^\']\) \}\}/g, relativeAssetsPath + '$1'))*/
 				.pipe(plugins.data(function(file) {
 					var flux = fs.readFileSync(paths.nunjucks.data + tmpjsondata, 'utf-8');
 					return JSON.parse(flux);
@@ -286,7 +283,7 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 					searchPaths: [paths.nunjucks.src],
 					setUp: function(env) {
 						env.addFilter('asset', function(path) {
-							return relativeAssetsPath + path;
+							return paths.nunjucks.assets + path;
 						});
 						return env;
 					}
@@ -337,25 +334,63 @@ gulp.task('myid', function() {
 				var mainTemplateSrc = 'layouts/main.html';
 				var mainTemplateDest = 'template';
 				var replaceThis = [
+
+					// {% block content %}{% endblock %}
 					[ '{% block content %}{% endblock %}', '<?php print $content ?>' ],
+
+					// {% block content %}<code />{% endblock %}
 					[ /\{\% block content \%\}([\s\S]*)\{\% endblock \%\}/g, '<!-- Content :: Template injected -->'+'$1' ],
-					[ /\{\{ ([a-z]*)(?:\.([a-z]*)) \}\}/g, '<?= $$$1->$2 ?>' ],
-					[ /\{\{ ([a-z]*)(?:\.([a-z]*))(?:\.([a-z]*)) \}\}/g, '<?= $$$1->$2->$3 ?>' ],
-					[ /\{\{ ([a-z]*)(?:\.([a-z]*))(?:\.([a-z]*))(?:\.([a-z]*)) \}\}/g, '<?= $$$1->$2->$3->$4 ?>' ],
+
+					// {% for a in b %}
+					[ /\{\% for ([a-zA-Z0-9\[\]_]*) in ([a-zA-Z0-9\[\]_]*)(?:\.([a-zA-Z0-9\[\]_]*))(?:\.([a-zA-Z0-9\[\]_]*)) \%\}/g, '<?php foreach($$$2->$3->$4 as $$$1): ?>' ],
+					[ /\{\% for ([a-zA-Z0-9\[\]_]*) in ([a-zA-Z0-9\[\]_]*)(?:\.([a-zA-Z0-9\[\]_]*)) \%\}/g, '<?php foreach($$$2->$3 as $$$1): ?>' ],
+					[ /\{\% for ([a-zA-Z0-9\[\]_]*) in ([a-zA-Z0-9\[\]_]*) \%\}/g, '<?php foreach($$$2 as $$$1): ?>' ],
+
+					// {% for a, b in b %}
+					[ /\{\% for ([a-zA-Z0-9\[\]_]*), ([a-zA-Z0-9\[\]_]*) in ([a-zA-Z0-9\[\]_]*)(?:\.([a-zA-Z0-9\[\]_]*))(?:\.([a-zA-Z0-9\[\]_]*)) \%\}/g, '<?php foreach($$$3->$4->$5 as $$$1 => $$$2): ?>' ],
+					[ /\{\% for ([a-zA-Z0-9\[\]_]*), ([a-zA-Z0-9\[\]_]*) in ([a-zA-Z0-9\[\]_]*)(?:\.([a-zA-Z0-9\[\]_]*)) \%\}/g, '<?php foreach($$$3->$4 as $$$1 => $$$2): ?>' ],
+					[ /\{\% for ([a-zA-Z0-9\[\]_]*), ([a-zA-Z0-9\[\]_]*) in ([a-zA-Z0-9\[\]_]*) \%\}/g, '<?php foreach($$$3 as $$$1 => $$$2): ?>' ],
+
+					// {% endfor %}
+					[ '{% endfor %}', '<?php endforeach; ?>' ],
+
+					// {{ a.b.c }}
+					[ /\{\{ ([a-zA-Z0-9\[\]_]*)(?:\.([a-zA-Z0-9\[\]_]*)) \}\}/g, '<?= $$$1->$2 ?>' ],
+					[ /\{\{ ([a-zA-Z0-9\[\]_]*)(?:\.([a-zA-Z0-9\[\]_]*))(?:\.([a-zA-Z0-9\[\]_]*)) \}\}/g, '<?= $$$1->$2->$3 ?>' ],
+					[ /\{\{ ([a-zA-Z0-9\[\]_]*)(?:\.([a-zA-Z0-9\[\]_]*))(?:\.([a-zA-Z0-9\[\]_]*))(?:\.([a-zA-Z0-9\[\]_]*)) \}\}/g, '<?= $$$1->$2->$3->$4 ?>' ],
+
+					// $main->
 					[ '$main->', '$template->' ],
+
+					// $pageName->
 					[ '$'+ argv.file.replace(/\.[^/.]+$/, '') +'->', '$' ],
+
+					// {% extends "page.html" %}
 					[ /\{\% extends (.*) \%\}(((\r*)(\n*))*)/g, '' ],
+
+					// {% raw %}<code />{% endraw %}
+					[ /\{\% raw \%\}([^~]*?)\{\% endraw \%\}/g, '$1' ],
+
+					// {% include "component.html" %}
+					[ /\{\% include (.*) \%\}/g, '<?php $this->load->view($1) ?>' ],
+
+					// {{ 'link-to-asset' | asset }}
 					[ /\{\{ \'(.*)\' \| asset \}\}/g, '<?= site_url(\'assets/$1\')?>' ],
+
+					// MyID $template requirements
 					[ '</head>', "\t"+'<!-- myID -->'+"\n\t"+'<?php'+"\n\t\t"+'print $template->get_meta();'+"\n\t\t"+'print $template->get_css();'+"\n\t"+'?>'+"\n\n"+'</head>' ],
 					[ '</body>', "\t"+'<!-- myID -->'+"\n\t"+'<?php'+"\n\t\t"+'print $template->get_scripts();'+"\n\t\t"+'print $template->google_tracker();'+"\n\t"+'?>'+"\n\n"+'</body>' ]
+				
 				];
 			/** Config Required **/
+
+			console.log( 'Converting \'' + console.colors.cyan(argv.file) + '\'' );
 
 			return 	gulp.src(fileToConvert)
 						.pipe(plugins.batchReplace(replaceThis))
 						.pipe(plugins.extReplace(extension))
 						.pipe(gulpif(argv.file == mainTemplateSrc, plugins.rename(mainTemplateDest + extension)))
-						.pipe(gulp.dest(convertDest));
+						.pipe(gulpif(argv.file == mainTemplateSrc, gulp.dest(convertDest), gulp.dest(convertDest + path.dirname(argv.file) + '/')));
 		}
 		else
 		{
