@@ -1,7 +1,7 @@
 {
     "name": "maoosi/front-compiler",
-    "description": "Boilerplate designed with Gulp. Fully-configurable resources compilation and static website generator.",
-    "version" : "0.0.8",
+    "description": "Front-end compiler designed with Gulp. Fully-configurable resources compilation and static website generator.",
+    "version" : "0.0.9",
     "authors": [
         {
             "name": "maoosi",

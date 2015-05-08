@@ -1,6 +1,6 @@
-#  [WIP] Front-compiler
+#  [WIP] Frontyc
 
-Boilerplate designed with [Gulp](http://gulpjs.com). Fully-configurable resources compilation and static website generator.
+Front-end compiler designed with [Gulp](http://gulpjs.com). Fully-configurable resources compilation and static website generator.
 
 
 ## Requirements
@@ -17,7 +17,7 @@ Boilerplate designed with [Gulp](http://gulpjs.com). Fully-configurable resource
 ## Note
 
 `public`, `vendor` and `resources` folders are not required for your project. They are here only as a demo project starter.
-If you want to use it as project starter, you will additionally need install the bower components by running `bower install` in your root folder. 
+If you want to use it as a boilerplate, you will additionally need to install bower components by running `bower install` in your root folder. 
 
 
 ## Installation
@@ -34,14 +34,14 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
 
 Then, go into `compiler/config/default/` folder and copy all config files to `compiler/config/`. Configure your project by editing copied files.
 
-> You can also change the config folder location by creating `compiler/config/external.js`
+> You can also change the config folder location by creating `compiler/config/external.js`:
 > ```javascript
 /*
     Config folder
 */
 
 var cfg = {
-	configPath : '../../../../application/config/front-compiler/'
+	configPath : 'path-to-config-folder/'
 };
 
 
@@ -81,25 +81,21 @@ gulp tpl
 
 # Copy all other files you may include in your resources folder
 gulp cp
-
-# Clean destination folder
-# /!\ Don't use it if your destination folder contains other files than the ones generated /!\
-gulp clean
 ```
 
 
 ## Unix alias
 
-When you install the compiler using composer, it could be painful to run command from the compiler folder. To facilitate this, here's an alias that you can easily set up on unix:
+When you install the compiler using composer, it could be painful to run command from the compiler folder. To make it easier, here's an alias that you can easily set up on Unix:
 
 ```shell
-alias front='function _front(){ (cd ./vendor/maoosi/front-compiler/compiler/;"$@") };_front'
+alias ftyc='function _frontyc(){ (cd ./vendor/maoosi/front-compiler/compiler/;"$@") };_frontyc'
 ```
 
 Now you can just run:
 
 ```shell
-front gulp
+ftyc gulp
 ```
 
 
