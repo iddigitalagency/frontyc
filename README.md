@@ -35,7 +35,7 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
 Then, go into `compiler/config/default/` folder and copy all config files to `compiler/config/`. Configure your project by editing copied files.
 
 > You can also change the config folder location by creating `compiler/config/external.js`:
-> ```javascript
+```javascript
 /*
     Config folder
 */
