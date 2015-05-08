@@ -24,7 +24,7 @@ If you want to use it as a boilerplate, you will additionally need to install bo
 
 First, copy `compiler` folder everywhere you want into your project. You can alternatively install it directly from composer:
 
-```json
+``` json
 {
     "require": {
     	"maoosi/front-compiler": "0.0.*"
@@ -35,7 +35,8 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
 Then, go into `compiler/config/default/` folder and copy all config files to `compiler/config/`. Configure your project by editing copied files.
 
 > You can also change the config folder location by creating `compiler/config/external.js`:
-```javascript
+
+``` javascript
 /*
     Config folder
 */
