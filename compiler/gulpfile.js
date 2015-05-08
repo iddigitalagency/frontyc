@@ -372,10 +372,10 @@ gulp.task('myid', function() {
 					[ /\{\% raw \%\}([^~]*?)\{\% endraw \%\}/g, '$1' ],
 
 					// {% include "component.html" %}
-					[ /\{\% include (.*) \%\}/g, '<?php $this->load->view($1) ?>' ],
+					[ /\{\% include ["|']([a-zA-Z0-9\[\]_/]*).(.*)["|'] \%\}/g, '<?php $this->load->view(\'$1\'); ?>' ],
 
 					// {{ 'link-to-asset' | asset }}
-					[ /\{\{ \'(.*)\' \| asset \}\}/g, '<?= site_url(\'assets/$1\')?>' ],
+					[ /\{\{ ["|'](.*)["|'] \| asset \}\}/g, '<?= site_url(\'assets/$1\') ?>' ],
 
 					// MyID $template requirements
 					[ '</head>', "\t"+'<!-- myID -->'+"\n\t"+'<?php'+"\n\t\t"+'print $template->get_meta();'+"\n\t\t"+'print $template->get_css();'+"\n\t"+'?>'+"\n\n"+'</head>' ],
