@@ -291,6 +291,7 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 				.on('error', function(err) {
 					console.log(err);// err is the error thrown by the Nunjucks compiler.
 				})
+				.pipe(plugins.extReplace('.html'))
 				.pipe(gulp.dest(paths.nunjucks.dest));
 	}	
 
