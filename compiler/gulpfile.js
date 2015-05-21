@@ -335,6 +335,13 @@ gulp.task('myid', function() {
 				var mainTemplateDest = 'template';
 				var replaceThis = [
 
+					// loop.function
+					[ 'loop.index0', '$this->array->index' ],
+					[ 'loop.index', '$this->array->index + 1' ],
+					[ '+ 1 + 1', '+ 2' ],
+					[ 'loop.length', 'count($this->array)' ],
+					[ /([a-zA-Z0-9\[\]_]*)\.indexOf\(["|']([a-zA-Z0-9\[\]_]*)["|']\) \> -1/g, "strpos($$$1, '$2') !== FALSE" ],
+
 					// {% block content %}{% endblock %}
 					[ '{% block content %}{% endblock %}', '<?php print $content ?>' ],
 
@@ -362,16 +369,15 @@ gulp.task('myid', function() {
 					[ /\{\{ ([a-zA-Z0-9\[\]_]*)(?:\.([a-zA-Z0-9\[\]_]*))(?:\.([a-zA-Z0-9\[\]_]*))(?:\.([a-zA-Z0-9\[\]_]*)) \}\}/g, '<?= $$$1->$2->$3->$4 ?>' ],
 
 					// {% if condition %}
-					[ /\{\% if ([^~]*?) \%\}/g, '<?php if ($1): ?>' ],
+					[ /\{\% if \(([a-zA-Z0-9\[\]_]*) ([^~]*?)\) \%\}/g, '<?php if ($$$1 $2): ?>' ],
+					[ /\{\% if \(([a-zA-Z0-9\[\]_]*)\.((?:[a-zA-Z0-9\[\]_])* )([^~]*?)\) \%\}/g, '<?php if ($$$1->$2$3): ?>' ],
+					[ /\{\% if \(([^~]*?)\) \%\}/g, '<?php if ($1): ?>' ],
+
+					// {% else %}
+					[ '{% else %}', '<?php else: ?>' ],
 
 					// {% endif %}
 					[ '{% endif %}', '<?php endif; ?>' ],
-
-					// loop.function
-					[ 'loop.index0', '$this->array->index' ],
-					[ 'loop.index', '$this->array->index + 1' ],
-					[ '+ 1 + 1', '+ 2' ],
-					[ 'loop.length', 'count($this->array)' ],
 
 					// $main->
 					[ '$main->', '$template->' ],
@@ -379,8 +385,15 @@ gulp.task('myid', function() {
 					// $pageName->
 					[ '$'+ argv.file.replace(/\.[^/.]+$/, '') +'->', '$' ],
 
+					// {% macro macro() %}
+					[ /\{\% macro ([^~]*?)\%\}(((\r*)(\n*))*)/g, '' ],
+					[ '{% endmacro %}', '' ],
+
+					// {{ macro.hero() }}
+					[ /\{\{ macro([^~]*?)\}\}(\r\n){0,1}/g, '' ],
+
 					// {% extends "page.html" %}
-					[ /\{\% extends (.*) \%\}(((\r*)(\n*))*)/g, '' ],
+					[ /\{\% extends ([^~]*?)\%\}(((\r*)(\n*))*)/g, '' ],
 
 					// {% raw %}<code />{% endraw %}
 					[ /\{\% raw \%\}([^~]*?)\{\% endraw \%\}/g, '$1' ],
@@ -388,8 +401,21 @@ gulp.task('myid', function() {
 					// {% include "component.html" %}
 					[ /\{\% include ["|']([a-zA-Z0-9\[\]_/]*).(.*)["|'] \%\}/g, '<?php $this->load->view(\'$1\'); ?>' ],
 
+					// {% import "components" as macro %}
+					[ /\{\% import ["|']([a-zA-Z0-9\[\]_/]*).(.*)["|'] as ([a-zA-Z0-9_]*) \%\}/g, '<?php $this->load->view(\'$1\'); ?>' ],
+
 					// {{ 'link-to-asset' | asset }}
 					[ /\{\{ ["|'](.*)["|'] \| asset \}\}/g, '<?= site_url(\'assets/$1\') ?>' ],
+
+					// {{ something.something | replace('a', 'b') }}
+					[ /\{\{ ([a-zA-Z0-9\[\]_]*)\.([a-zA-Z0-9\[\]_]*) \| replace\(['|"](.*)['|"], ['|"](.*)['|"]\) \}\}/g, '<?= str_replace(\'$3\', \'$4\', $$$1->$2) ?>' ],
+
+					// <title></title>
+					[ /\<title\>(.*)\<\/title\>(\r\n)/g, '' ],
+					[ /\<\!\-\- Title \-\-\>(\r\n){1,}/g, '' ],
+
+					// <meta name="description">
+					[ /\<meta(.*)description([^~]*?)\>(\r\n)(\r\n)/g, '' ],
 
 					// MyID $template requirements
 					[ '</head>', "\t"+'<!-- myID -->'+"\n\t"+'<?php'+"\n\t\t"+'print $template->get_meta();'+"\n\t\t"+'print $template->get_css();'+"\n\t"+'?>'+"\n\n"+'</head>' ],
