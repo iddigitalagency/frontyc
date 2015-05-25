@@ -339,6 +339,7 @@ gulp.task('myid', function() {
 					// loop.function
 					[ 'loop.index0', '$this->array->index' ],
 					[ 'loop.index', '$this->array->index + 1' ],
+					[ 'loop.last', 'count($this->array) == $this->array->index' ],
 					[ '+ 1 + 1', '+ 2' ],
 					[ 'loop.length', 'count($this->array)' ],
 					[ /([a-zA-Z0-9\[\]_]*)\.indexOf\(["|']([a-zA-Z0-9\[\]_]*)["|']\) \> -1/g, "strpos($$$1, '$2') !== FALSE" ],
