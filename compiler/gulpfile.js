@@ -418,11 +418,10 @@ gulp.task('myid', function() {
 
 			];
 
-			var replaceSpecific = compilerOpt.myid.myConverter;
-
 			console.log( 'Converting \'' + console.colors.cyan(argv.file) + '\'' );
 
 			var convertDest = basePaths.dest + compilerOpt.myid.outputPath;
+			var replaceSpecific = compilerOpt.myid.myConverter;
 
 			return 	gulp.src(fileToConvert)
 						.pipe(plugins.batchReplace(replaceThis))
@@ -432,6 +431,13 @@ gulp.task('myid', function() {
 							path.basename = compilerOpt.myid.filesRenaming[argv.file];
 							path.extname = '';
 						})))
+
+						.pipe(gulpif(compilerOpt.myid.injectView[path.basename(argv.file, compilerOpt.tplFormat) + compilerOpt.myid.outputFormat] != undefined, plugins.htmlExtend({
+							annotations: false,
+							verbose: false,
+							root: convertDest
+						})))
+
 						.pipe(gulpif(compilerOpt.myid.filesRenaming[argv.file] != undefined, gulp.dest(convertDest), gulp.dest(convertDest + path.dirname(argv.file) + '/')));
 		}
 		else

@@ -16,16 +16,19 @@ var compilerOpt = {
 		// Output file format
 		outputFormat : '.php',
 
-		// Rename files on the fly (must not include file extension)
-		filesRenaming : {
-			'layouts/main.twig': 'template.php'
-		},
-
 		// Output for converted files relative to basePaths.dest
 		outputPath : 'application/views/generated/',
 
 		// Project specific converter
-		myConverter : []
+		myConverter : [],
+
+		// Project specific view injection (content -> master)
+		injectView : {},
+
+		// Rename files on the fly (must not include file extension)
+		filesRenaming : {
+			'layouts/main.twig': 'template.php'
+		},
 
 	}
 
