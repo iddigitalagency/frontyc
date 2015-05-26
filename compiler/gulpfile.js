@@ -18,17 +18,9 @@ if (fs.existsSync('./config/external.js')) {
 
 var compilerOpt = require(configPath + 'compiler.js').compilerOpt;
 var vendorFiles = require(configPath + 'vendor.js').vendorFiles;
-var nunjucksOpt = require(configPath + 'nunjucks.js').nunjucksOpt;
 var projectPaths = require(configPath + 'paths.js');
 var basePaths = projectPaths.basePaths;
 var paths = projectPaths.paths;
-
-
-/*
-    Gulp Required Functions
-*/
-
-//var func = require('./libs/functions.js');
 
 
 /*
@@ -170,7 +162,6 @@ gulp.task('sass', function() {
 });
 
 
-
 /*
     Css Generator
 */ 
@@ -212,19 +203,19 @@ gulp.task('cp', function() {
 	gulp.src([
 		basePaths.assets.src + '*.*'
 	], {base: basePaths.assets.src})
-	.pipe(gulp.dest(basePaths.dest));
+		.pipe(gulp.dest(basePaths.dest));
 
 	return gulp.src([
-				basePaths.assets.src + '**/*',
-				'!' + basePaths.assets.src + '*.*',
-				'!' + paths.images.src,
-				'!' + paths.images.src + '*',
-				'!' + paths.scripts.src,
-				'!' + paths.scripts.src + '*',
-				'!' + paths.styles.src,
-				'!' + paths.styles.src + '*'
-			], {base: basePaths.src})
-			.pipe(gulp.dest(basePaths.dest));
+		basePaths.assets.src + '**/*',
+		'!' + basePaths.assets.src + '*.*',
+		'!' + paths.images.src,
+		'!' + paths.images.src + '**',
+		'!' + paths.scripts.src,
+		'!' + paths.scripts.src + '**',
+		'!' + paths.styles.src,
+		'!' + paths.styles.src + '**'
+	], {base: basePaths.assets.src})
+		.pipe(gulp.dest(basePaths.assets.dest));
 
 });
 
@@ -252,7 +243,7 @@ gulp.task('img', function () {
 
 gulp.task('getdatafrommodel', function() {
 
-	if (compilerOpt.useNunjucks) {
+	if (compilerOpt.enablePreview) {
 		return gulp.src([paths.nunjucks.data + '**/*.json', '!' + paths.nunjucks.data + 'compiled_data.json'])
 				.pipe(plugins.jsoncombine(tmpjsondata, function(data){
 					return new Buffer(JSON.stringify(data));
@@ -269,10 +260,10 @@ gulp.task('getdatafrommodel', function() {
 
 gulp.task('nunjucks', ['getdatafrommodel'], function() {
 
-	if (compilerOpt.useNunjucks) {
+	if (compilerOpt.enablePreview) {
 
 		return gulp.src([
-					paths.nunjucks.src + '*' + nunjucksOpt.tplFormat,
+					paths.nunjucks.src + '*' + compilerOpt.tplFormat,
 					'!' + paths.nunjucks.src + 'layouts'
 				])
 				.pipe(plugins.data(function(file) {
@@ -304,7 +295,7 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 
 gulp.task('tpl', ['nunjucks'], function(cb) {
 
-	if (compilerOpt.useNunjucks) {
+	if (compilerOpt.enablePreview) {
 		remove(paths.nunjucks.data + tmpjsondata, {force: true}, cb);
 	}
 
@@ -330,10 +321,6 @@ gulp.task('myid', function() {
 		if (fs.existsSync(fileToConvert))
 		{
 			/** Config Required **/
-				var convertDest = basePaths.dest + 'application/views/generated/';
-				var extension = '.php';
-				var mainTemplateSrc = 'layouts/main.html';
-				var mainTemplateDest = 'template';
 				var replaceThis = [
 
 					// loop.function
@@ -428,11 +415,16 @@ gulp.task('myid', function() {
 
 			console.log( 'Converting \'' + console.colors.cyan(argv.file) + '\'' );
 
+			var convertDest = basePaths.dest + compilerOpt.myid.outputPath;
+
 			return 	gulp.src(fileToConvert)
 						.pipe(plugins.batchReplace(replaceThis))
-						.pipe(plugins.extReplace(extension))
-						.pipe(gulpif(argv.file == mainTemplateSrc, plugins.rename(mainTemplateDest + extension)))
-						.pipe(gulpif(argv.file == mainTemplateSrc, gulp.dest(convertDest), gulp.dest(convertDest + path.dirname(argv.file) + '/')));
+						.pipe(plugins.extReplace(compilerOpt.myid.outputFormat))
+						.pipe(gulpif(compilerOpt.myid.filesRenaming[argv.file] != undefined, plugins.rename(function (path) {
+							path.basename = compilerOpt.myid.filesRenaming[argv.file];
+							path.extname = '';
+						})))
+						.pipe(gulpif(compilerOpt.myid.filesRenaming[argv.file] != undefined, gulp.dest(convertDest), gulp.dest(convertDest + path.dirname(argv.file) + '/')));
 		}
 		else
 		{
@@ -465,7 +457,7 @@ gulp.task('watch', ['default'], function(){
         changeEvent(evt);
     });
 
-    if (compilerOpt.useNunjucks) {
+    if (compilerOpt.enablePreview) {
 	    gulp.watch([
 			paths.nunjucks.src + '**/*',
 			paths.nunjucks.data + '**/*',

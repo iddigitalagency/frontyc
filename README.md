@@ -1,4 +1,4 @@
-#  [WIP] Frontyc
+#  [beta] Frontyc
 
 Front-end compiler designed with [Gulp](http://gulpjs.com). Fully-configurable resources compilation and static website generator.
 
@@ -27,14 +27,14 @@ First, copy `compiler` folder everywhere you want into your project. You can alt
 ``` json
 {
     "require": {
-    	"maoosi/front-compiler": "0.0.*"
+    	"maoosi/frontyc": "dev-master"
 	}
 }
 ```
 
-Then, go into `compiler/config/default/` folder and copy all config files to `compiler/config/`. Configure your project by editing copied files.
+Then, go into `compiler/config/` folder and configure your project by editing files.
 
-> You can also change the config folder location by creating `compiler/config/external.js`:
+> You can also change the config folder location by creating `compiler/config/external.js` containing this:
 
 ``` javascript
 /*
@@ -80,8 +80,11 @@ gulp img
 # If set in your config file, compile all your template files into static html using nunjucks and json models
 gulp tpl
 
-# Copy all other files you may include in your resources folder
+# Copy all other files you may include in your resources folder (folder copied into assets folder, files copied to root folder)
 gulp cp
+
+# Convert a file for MyID CMS
+gulp myid --file filename.twig
 ```
 
 
@@ -90,13 +93,13 @@ gulp cp
 When you install the compiler using composer, it could be painful to run command from the compiler folder. To make it easier, here's an alias that you can easily set up on Unix:
 
 ```shell
-alias ftyc='function _frontyc(){ (cd ./vendor/maoosi/front-compiler/compiler/;"$@") };_frontyc'
+alias ftyc='function _frontyc(){ (cd ./vendor/maoosi/front-compiler/compiler/;gulp "$@") };_frontyc'
 ```
 
-Now you can just run:
+Now you can just run in yout project root directory:
 
 ```shell
-ftyc gulp
+ftyc / ftyc watch / ftyc js / ...
 ```
 
 
