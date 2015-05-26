@@ -3,4 +3,5 @@
 /vendor/*
 !/vendor/test/*
 !/vendor/empty
+/.idea/*
 *.DS_Store
