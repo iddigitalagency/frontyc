@@ -22,7 +22,10 @@ var compilerOpt = {
 		},
 
 		// Output for converted files relative to basePaths.dest
-		outputPath : 'application/views/generated/'
+		outputPath : 'application/views/generated/',
+
+		// Project specific converter
+		myConverter : []
 
 	}
 
