@@ -93,7 +93,7 @@ gulp myid --file filename.twig
 When you install the compiler using composer, it could be painful to run command from the compiler folder. To make it easier, here's an alias that you can easily set up on Unix:
 
 ```shell
-alias ftyc='function _frontyc(){ (cd ./vendor/maoosi/front-compiler/compiler/;gulp "$@") };_frontyc'
+alias ftyc='function _frontyc(){ (cd ./vendor/maoosi/frontyc/compiler/;gulp "$@") };_frontyc'
 ```
 
 Now you can just run in yout project root directory:
