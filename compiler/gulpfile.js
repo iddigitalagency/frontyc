@@ -323,6 +323,7 @@ gulp.task('myid', function() {
 			var replaceThis = [
 
 				// loop.function
+				[ '{{ loop.index }}', '<?= $this->array->index ?>' ],
 				[ 'loop.index0', '$this->array->index' ],
 				[ 'loop.index', '$this->array->index + 1' ],
 				[ 'loop.last', 'count($this->array) == $this->array->index' ],
@@ -330,7 +331,7 @@ gulp.task('myid', function() {
 				[ '+ 1 + 1', '+ 2' ],
 				[ 'loop.length', 'count($this->array)' ],
 				[ '(not ', '(!' ],
-				[ /([a-zA-Z0-9\[\]_]*)\.indexOf\(["|'](.*)["|']\) \> -1/g, "strpos($$$1, '$2') !== false" ],
+				[ /([a-zA-Z0-9\[\]_]*)\.indexOf\(["|']([a-zA-Z0-9\[\]_]*)["|']\) \> -1/g, "strpos($$$1, '$2') !== FALSE" ],
 
 				// {% block content %}{% endblock %}
 				[ '{% block content %}{% endblock %}', '<?php print $content ?>' ],
@@ -363,10 +364,14 @@ gulp.task('myid', function() {
 				//[ /\{\% if \(([a-zA-Z0-9\[\]_\-\>]*) (==|not|or) ((false|true)*)\) \%\}/g, '<?php if ($$$1 $2 $3): ?>' ], // boolean
 				//[ /\{\% if \(([a-zA-Z0-9\[\]_\-\>]*) (==|not|or) ['|"](.*)['|"]\) \%\}/g, '<?php if ($$$1 $2 "$3"): ?>' ], // value
 				//[ /\{\% if \(([a-zA-Z0-9\[\]_\-\>]*) (==|not|or) (.*)\) \%\}/g, '<?php if ($$$1 $2 $$$3): ?>' ], // variable
-
 				[ /\{\% if \(([a-zA-Z0-9\[\]_]*) ([^~]*?)\) \%\}/g, '<?php if ($$$1 $2): ?>' ],
 				[ /\{\% if \(([a-zA-Z0-9\[\]_]*)\.((?:[a-zA-Z0-9\[\]_])* )([^~]*?)\) \%\}/g, '<?php if ($$$1->$2$3): ?>' ],
 				[ /\{\% if \(([^~]*?)\) \%\}/g, '<?php if ($1): ?>' ],
+
+				// {% elif condition %}
+				[ /\{\% elif \(([a-zA-Z0-9\[\]_]*) ([^~]*?)\) \%\}/g, '<?php elseif ($$$1 $2): ?>' ],
+				[ /\{\% elif \(([a-zA-Z0-9\[\]_]*)\.((?:[a-zA-Z0-9\[\]_])* )([^~]*?)\) \%\}/g, '<?php elseif ($$$1->$2$3): ?>' ],
+				[ /\{\% elif \(([^~]*?)\) \%\}/g, '<?php elseif ($1): ?>' ],
 
 				// {% else %}
 				[ '{% else %}', '<?php else: ?>' ],
