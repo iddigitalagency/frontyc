@@ -1,7 +1,33 @@
-/public/*
-!/public/empty
-/vendor/*
-!/vendor/test/*
-!/vendor/empty
-/.idea/*
+# Public folder (remove this for git sync)
+/public/
+
+# Vendor
+/vendor/
+!/vendor/maoosi/frontyc/compiler/config/external.js
+
+# PHP Storm
+/.idea/
+
+# OSX
+._*
 *.DS_Store
+.AppleDouble
+.LSOverride
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
