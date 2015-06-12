@@ -26,9 +26,7 @@ var compilerOpt = {
 		injectView : {},
 
 		// Rename files on the fly (must not include file extension)
-		filesRenaming : {
-			'layouts/main.twig': 'template.php'
-		},
+		filesRenaming : {}
 
 	}
 

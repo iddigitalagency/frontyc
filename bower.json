@@ -1,8 +1,9 @@
 {
-  "name": "maoosi.front-compiler",
+  "name": "maoosi.frontyc",
   "dependencies": {
-    "foundation": "~5.4.7",
-    "bourbon": "~4.2.1",
-    "csstyle": "~1.4.0"
+    "foundation": "~5.5.2",
+    "bourbon": "~4.2.3",
+    "csstyle": "~1.4.0",
+	"velocity": "~1.2.2"
   }
 }

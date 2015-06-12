@@ -3,14 +3,14 @@ var root_dir = '../';
 
 var basePaths = {
 
-    src: root_dir + 'resources/', // Path to sources folder
+    src: root_dir + '--sources/', // Path to sources folder
     dest: root_dir + 'public/', // Path to www / root / public_html
 
     vendor: root_dir + 'vendor/',
     bower: root_dir + './vendor/bower/',
 
     assets: {
-        src: root_dir + 'resources/assets/',
+        src: root_dir + '--sources/assets/',
         dest: root_dir + 'public/assets/'
     }
 
@@ -40,6 +40,7 @@ var paths = {
         dest: basePaths.dest,
         assets: 'assets/'
     }
+
 };
 
 exports.basePaths = basePaths;
