@@ -63,6 +63,15 @@ var changeEvent = function(evt) {
 
 
 /*
+ 	Errors Log
+ */
+
+var errorEvent = function(error) {
+	console.log('Error', console.colors.white(console.colors.bgMagenta(error)));
+};
+
+
+/*
     Project Cleaner (destination folder)
 */
 
@@ -106,22 +115,39 @@ gulp.task('concatjs', ['jshint'], function() {
     Javascript Generator
 */ 
 
-gulp.task('js', ['concatjs'], function() {
-	
-	var vendorList = vendorFiles.scripts;
-	vendorList['app.js'].unshift(paths.scripts.dest + 'app.js');
+function jsCompile(file)
+{
+	if (typeof file == 'undefined') {
+		var vendorList = vendorFiles.scripts;
+		vendorList['app.js'].unshift(paths.scripts.dest + 'app.js');
+	} else {
+		console.log('glut');
+		//var vendorList[parentFile] = file;
+	}
 
-	for (var destFile in vendorList) {
+	// Foreach vendor output
+	for (var destFile in vendorList)
+	{
 		var destFileMin = destFile.replace('.js', '.min.js');
 		var requireUglify = ( destFile.search('.js') == -1 || destFile.search('.min.js') != -1 ) ? false : true;
 
+		// Log file generation
 		console.log( 'Creating \'' + console.colors.cyan(destFile) + '\'' );
+
+		// Log file uglification
 		if (requireUglify) console.log( 'Uglifying \'' + console.colors.yellow(destFileMin) + '\'' );
 
+		// Log child files
 		for (var n = 0, len = vendorList[destFile].length; n < len; ++n)
 			console.log( console.colors.grey(' |--> ' + vendorList[destFile][n]) );
 
 		var stream = gulp.src(vendorList[destFile])
+					.pipe(plugins.plumber({
+						errorHandler: function (err) {
+							errorEvent(err);
+							this.emit('end');
+						}
+					}))
 					.pipe(plugins.concat(destFile))
 				    .pipe(gulp.dest(paths.scripts.dest))
 				    .pipe(gulpif(requireUglify, plugins.rename(destFileMin)))
@@ -130,6 +156,11 @@ gulp.task('js', ['concatjs'], function() {
 	}
 
 	return stream;
+}
+
+gulp.task('js', ['concatjs'], function() {
+	
+	jsCompile();
 
 });
 
@@ -142,16 +173,27 @@ gulp.task('sass', function() {
 
 	if (compilerOpt.useRubySass) {
 
+		// Sass compilation using ruby sass gem
 		return plugins.rubySass(paths.styles.src + 'libraries.scss', {require: 'sass-globbing', loadPath: paths.styles.src})
-			    .on('error', function(err){
-			    	new console.PluginError('Ruby Sass', err.message, {showStack: true});
-			    })
+				.pipe(plugins.plumber({
+					errorHandler: function (err) {
+						errorEvent(err);
+						this.emit('end');
+					}
+				}))
 			    .pipe(plugins.rename('app.css'))
 			    .pipe(gulp.dest(paths.styles.dest));
 
 	} else {
 
+		// Sass compilation using libsass library
 		return gulp.src(paths.styles.src + 'libraries.scss')
+				.pipe(plugins.plumber({
+					errorHandler: function (err) {
+						errorEvent(err);
+						this.emit('end');
+					}
+				}))
 				.pipe(plugins.sassBulkImport())
 				.pipe(plugins.sass())
 			    .pipe(plugins.rename('app.css'))
@@ -171,17 +213,29 @@ gulp.task('css', ['sass'], function() {
 	var vendorList = vendorFiles.styles;
 	vendorList['app.css'].unshift(paths.styles.dest + 'app.css');
 
-	for (var destFile in vendorList) {
+	// Foreach vendor output
+	for (var destFile in vendorList)
+	{
 		var destFileMin = destFile.replace('.css', '.min.css');
 		var requireMinify = ( destFile.search('.css') == -1 || destFile.search('.min.css') != -1 ) ? false : true;
 
+		// Log file generation
 		console.log( 'Creating \'' + console.colors.cyan(destFile) + '\'' );
+
+		// Log file minification
 		if (requireMinify) console.log( 'Minifying \'' + console.colors.yellow(destFileMin) + '\'' );
 
+		// Log child files
 		for (var n = 0, len = vendorList[destFile].length; n < len; ++n)
 			console.log( console.colors.grey(' |--> ' + vendorList[destFile][n]) );
 
 		var stream = gulp.src(vendorList[destFile])
+					.pipe(plugins.plumber({
+						errorHandler: function (err) {
+							errorEvent(err);
+							this.emit('end');
+						}
+					}))
 					.pipe(plugins.concat(destFile))
 				    .pipe(gulp.dest(paths.styles.dest))
 				    .pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
@@ -266,6 +320,12 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 					paths.nunjucks.src + '*' + compilerOpt.tplFormat,
 					'!' + paths.nunjucks.src + 'layouts'
 				])
+				.pipe(plugins.plumber({
+					errorHandler: function (err) {
+						errorEvent(err);
+						this.emit('end');
+					}
+				}))
 				.pipe(plugins.data(function(file) {
 					var flux = fs.readFileSync(paths.nunjucks.data + tmpjsondata, 'utf-8');
 					return JSON.parse(flux);
@@ -279,9 +339,6 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 						return env;
 					}
 				}))
-				.on('error', function(err) {
-					console.log(err);// err is the error thrown by the Nunjucks compiler.
-				})
 				.pipe(plugins.extReplace('.html'))
 				.pipe(gulp.dest(paths.nunjucks.dest));
 	}	
@@ -312,7 +369,6 @@ gulp.task('myid', function() {
 			    .usage('Usage: $0 --file [path]')
 			    .demand(['file'])
 			    .argv;
-
 
 	if (argv.file != undefined && argv.file !== true)
 	{
@@ -423,6 +479,7 @@ gulp.task('myid', function() {
 
 			];
 
+			// Log file conversion
 			console.log( 'Converting \'' + console.colors.cyan(argv.file) + '\'' );
 
 			var convertDest = basePaths.dest + compilerOpt.myid.outputPath;
@@ -468,7 +525,8 @@ gulp.task('watch', ['default'], function(){
         changeEvent(evt);
     });
 
-    gulp.watch(paths.scripts.src + '**/*', ['js']).on('change', function(evt) {
+    gulp.watch(paths.scripts.src + '**/*', function(evt) {
+    	jsCompile(evt.file);
         changeEvent(evt);
     });
 
@@ -488,13 +546,13 @@ gulp.task('watch', ['default'], function(){
 
     gulp.watch([
 		basePaths.assets.src + '**/*',
-		'!' + basePaths.assets.src + '*.*',
+		basePaths.assets.src + '*.*',
 		'!' + paths.images.src,
-		'!' + paths.images.src + '*',
+		'!' + paths.images.src + '**',
 		'!' + paths.scripts.src,
-		'!' + paths.scripts.src + '*',
+		'!' + paths.scripts.src + '**',
 		'!' + paths.styles.src,
-		'!' + paths.styles.src + '*'
+		'!' + paths.styles.src + '**'
 	], ['cp']).on('change', function(evt) {
         changeEvent(evt);
     });
