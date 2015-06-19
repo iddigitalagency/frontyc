@@ -132,35 +132,51 @@ gulp.task('concatjs', ['jshint'], function() {
  Javascript Generator
  */
 
-var jsCompile = function _jsCompile(vendorList) {
-	// Foreach vendor output
+var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
+	var _ext = fileType;
+
 	for (var destFile in vendorList)
 	{
-		var destFileMin = destFile.replace('.js', '.min.js');
-		var requireUglify = ( destFile.search('.js') == -1 || destFile.search('.min.js') != -1 ) ? false : true;
+		var destFileMin = destFile.replace('.'+_ext, '.min.'+_ext);
+		var requireMinify = ( destFile.search('.'+_ext) == -1 || destFile.search('.min.'+_ext) != -1 ) ? false : true;
 
 		// Log file generation
 		infoMessage('Creating \'' + destFile + '\'');
 
-		// Log file uglification
-		if (requireUglify) infoMessage('Uglifying \'' + destFileMin + '\'');
+		// Log file minification
+		if (requireMinify) infoMessage('Minifying \'' + destFileMin + '\'');
 
 		// Log child files
 		for (var n = 0, len = vendorList[destFile].length; n < len; ++n)
 			neutralMessage(' |--> ' + vendorList[destFile][n]);
 
-		var stream = gulp.src(vendorList[destFile])
-			.pipe(plugins.plumber({
-				errorHandler: function (err) {
-					errorMessage(err);
-					this.emit('end');
-				}
-			}))
-			.pipe(plugins.concat(destFile))
-			.pipe(gulp.dest(paths.scripts.dest))
-			.pipe(gulpif(requireUglify, plugins.rename(destFileMin)))
-			.pipe(gulpif(requireUglify, plugins.uglify()))
-			.pipe(gulpif(requireUglify, gulp.dest(paths.scripts.dest)));
+		if (_ext == 'js') {
+			var stream = gulp.src(vendorList[destFile])
+				.pipe(plugins.plumber({
+					errorHandler: function (err) {
+						errorMessage(err);
+						this.emit('end');
+					}
+				}))
+				.pipe(plugins.concat(destFile))
+				.pipe(gulp.dest(paths.scripts.dest))
+				.pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
+				.pipe(gulpif(requireMinify, plugins.uglify()))
+				.pipe(gulpif(requireMinify, gulp.dest(paths.scripts.dest)));
+		} else {
+			var stream = gulp.src(vendorList[destFile])
+				.pipe(plugins.plumber({
+					errorHandler: function (err) {
+						errorMessage(err);
+						this.emit('end');
+					}
+				}))
+				.pipe(plugins.concat(destFile))
+				.pipe(gulp.dest(paths.styles.dest))
+				.pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
+				.pipe(gulpif(requireMinify, plugins.minifyCss()))
+				.pipe(gulpif(requireMinify, gulp.dest(paths.styles.dest)));
+		}
 	}
 
 	return stream;
@@ -169,14 +185,14 @@ var jsCompile = function _jsCompile(vendorList) {
 
 gulp.task('js', ['concatjs'], function() {
 
-	var vendorList = JSON.parse(JSON.stringify(vendorFiles.scripts));
-	vendorList['app.js'].unshift(paths.scripts.dest + 'app.js');
+	var jsVendorList = JSON.parse(JSON.stringify(vendorFiles.scripts));
+	jsVendorList['app.js'].unshift(paths.scripts.dest + 'app.js');
 
 	if (typeof changedFile.file !== 'undefined') {
-		vendorList = parentSearch(vendorList, changedFile.file);
+		jsVendorList = parentSearch(jsVendorList, changedFile.file);
 	}
 
-	jsCompile(vendorList);
+	return vendorCompilation(jsVendorList, 'js');
 
 });
 
@@ -226,40 +242,9 @@ gulp.task('sass', function() {
 
 gulp.task('css', ['sass'], function() {
 
-	var vendorList = vendorFiles.styles;
-	vendorList['app.css'].unshift(paths.styles.dest + 'app.css');
-
-	// Foreach vendor output
-	for (var destFile in vendorList)
-	{
-		var destFileMin = destFile.replace('.css', '.min.css');
-		var requireMinify = ( destFile.search('.css') == -1 || destFile.search('.min.css') != -1 ) ? false : true;
-
-		// Log file generation
-		infoMessage('Creating \'' + destFile + '\'');
-
-		// Log file minification
-		if (requireMinify) infoMessage('Minifying \'' + destFileMin + '\'' );
-
-		// Log child files
-		for (var n = 0, len = vendorList[destFile].length; n < len; ++n)
-			neutralMessage(' |--> ' + vendorList[destFile][n]);
-
-		var stream = gulp.src(vendorList[destFile])
-			.pipe(plugins.plumber({
-				errorHandler: function (err) {
-					errorMessage(err);
-					this.emit('end');
-				}
-			}))
-			.pipe(plugins.concat(destFile))
-			.pipe(gulp.dest(paths.styles.dest))
-			.pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
-			.pipe(gulpif(requireMinify, plugins.minifyCss()))
-			.pipe(gulpif(requireMinify, gulp.dest(paths.styles.dest)));
-	}
-
-	return stream;
+	var cssVendorList = JSON.parse(JSON.stringify(vendorFiles.styles));
+	cssVendorList['app.css'].unshift(paths.styles.dest + 'app.css');
+	return vendorCompilation(cssVendorList, 'css');
 
 });
 
