@@ -65,6 +65,9 @@ Project is ready to go !
 # Full project compilation
 gulp
 
+# Including --dev flag to any command will disable css & js minification for a quicker compilation
+gulp --dev
+
 # Launch files watcher
 gulp watch
 
