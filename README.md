@@ -78,13 +78,13 @@ gulp css
 gulp img
 
 # If set in your config file, compile all your template files into static html using nunjucks and json models
-gulp tpl
+gulp static
 
 # Copy all other files you may include in your resources folder (folder copied into assets folder, files copied to root folder)
 gulp cp
 
-# Convert a file for MyID CMS
-gulp myid --file filename.twig
+# Convert a file to the template engine format of your choice (myid / twig / blade)
+gulp tpl --file filename.twig
 ```
 
 

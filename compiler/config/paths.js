@@ -6,7 +6,6 @@ var basePaths = {
     src: root_dir + '--sources/', // Path to sources folder
     dest: root_dir + 'public/', // Path to www / root / public_html
 
-    vendor: root_dir + 'vendor/',
     bower: root_dir + './vendor/bower/',
 
     assets: {
@@ -33,7 +32,7 @@ var paths = {
         dest: basePaths.assets.dest + 'css/'
     },
 
-    /* Used for Nunjucks templates compilation */
+    /* Used for Nunjucks static templates compilation */
     nunjucks: {
         data: basePaths.src + 'models/',
         src: basePaths.src + 'views/',
