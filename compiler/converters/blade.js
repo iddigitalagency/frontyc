@@ -1,3 +1,5 @@
-var converter = [];
+module.exports = function(file) {
 
-exports.converter = converter;
+	return [];
+	
+};

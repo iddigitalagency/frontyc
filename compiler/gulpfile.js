@@ -68,7 +68,7 @@ var fileChangeEvent = function(evt) {
 
 	if (evt.type == 'deleted') {
 		var fileToRemove = basePaths.dest + fileChanged;
-		var fileToRemoveBaseDir = fileToRemove.replace(/\\/g,'/').replace(/\/[^\/]*$/, '').replace(/\\/g,'/').replace( /.*\//, '' );
+		var fileToRemoveBaseDir = path.basename( path.dirname(fileToRemove) );
 
 		// If base dir is equal to root folder
 		if (fileToRemoveBaseDir == 'assets')
@@ -128,23 +128,11 @@ gulp.task('jshint', function() {
 
 
 /*
- Javascript Concat
- */
-
-gulp.task('concatjs', ['jshint'], function() {
-
-	return gulp.src(paths.scripts.src + '**/*.js')
-		.pipe(plugins.concat('app.js'))
-		.pipe(gulp.dest(paths.scripts.dest));
-
-});
-
-
-/*
  Javascript Generator
  */
 
 var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
+	var stream;
 	var _ext = fileType;
 
 	for (var destFile in vendorList)
@@ -163,7 +151,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 			neutralMessage(' |--> ' + vendorList[destFile][n]);
 
 		if (_ext == 'js') {
-			var stream = gulp.src(vendorList[destFile])
+			stream = gulp.src(vendorList[destFile])
 				.pipe(plugins.plumber({
 					errorHandler: function (err) {
 						errorMessage(err);
@@ -176,7 +164,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 				.pipe(gulpif(requireMinify, plugins.uglify()))
 				.pipe(gulpif(requireMinify, gulp.dest(paths.scripts.dest)));
 		} else {
-			var stream = gulp.src(vendorList[destFile])
+			stream = gulp.src(vendorList[destFile])
 				.pipe(plugins.plumber({
 					errorHandler: function (err) {
 						errorMessage(err);
@@ -195,15 +183,43 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 };
 
 
-gulp.task('js', ['concatjs'], function() {
+gulp.task('js', ['jshint'], function() {
 
 	var jsVendorList = JSON.parse(JSON.stringify(vendorFiles.scripts));
-	jsVendorList['app.js'].unshift(paths.scripts.dest + 'app.js');
 
+	// Add user scripts
+	fs.readdirSync(paths.scripts.src).filter(function(_unknown) {
+		var currentPath = path.join(paths.scripts.src, _unknown);
+		var currentUnknown = path.basename(currentPath);
+
+		// Add scripts to respective .js file
+		if (fs.statSync(currentPath).isDirectory()) {
+			var scriptsList = (typeof jsVendorList[currentUnknown + '.js'] !== 'undefined') ? jsVendorList[currentUnknown + '.js'] : [];
+
+			// All scripts inside directory
+			fs.readdirSync(currentPath).filter(function(_file) {
+				var currentSubPath = path.join(paths.scripts.src, _unknown, _file);
+
+				if (!fs.statSync(currentSubPath).isDirectory()) {
+					var currentFile = path.basename(currentSubPath);
+					scriptsList.push(paths.scripts.src + currentUnknown + '/' + currentFile);
+				}
+			});
+
+			jsVendorList[currentUnknown + '.js'] = scriptsList;
+		}
+		// Add scripts to app.js
+		else {
+			jsVendorList['app.js'].unshift(paths.scripts.src + currentUnknown);
+		}
+	});
+
+	// If only one file modified, vendorList is overwritten
 	if (typeof changedFile.file !== 'undefined') {
 		jsVendorList = parentSearch(jsVendorList, changedFile.file);
 	}
 
+	// Run concat and minify
 	return vendorCompilation(jsVendorList, 'js');
 
 });
@@ -418,7 +434,7 @@ gulp.task('tpl', function() {
 		if (fs.existsSync(fileToConvert))
 		{
 			// Load current converter
-			var replaceThis = require('converters/'+ compilerOpt.tplConverter.converter +'.js').converter;
+			var replaceThis = require('./converters/'+ compilerOpt.tplConverter.converter +'.js')(argv.file);
 
 			// Log file conversion
 			infoMessage('Converting \'' + argv.file + '\'');
