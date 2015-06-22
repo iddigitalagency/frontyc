@@ -21,6 +21,7 @@ var vendorFiles = require(configPath + 'vendor.js').vendorFiles;
 var projectPaths = require(configPath + 'paths.js');
 var basePaths = projectPaths.basePaths;
 var paths = projectPaths.paths;
+var root_dir = projectPaths.root_dir;
 
 
 /*
@@ -53,20 +54,25 @@ var runSequence = require('run-sequence');
  Events Log
  */
 
-var changeEvent = function(evt) {
-	console.log('File', console.colors.bgBlue(evt.path.replace(new RegExp('/.*(?=/' + basePaths.src + ')/'), '') + ' was ' + evt.type));
-
-	if (evt.type == 'deleted') {
-		console.log('debug::evt.path - ' + evt.path);
-		//remove(basePaths.src, {force: true})
-	}
-};
-
 var errorMessage = function(message) { console.log(console.colors.bgYellow(message)); };
 var successMessage = function(message) { console.log(console.colors.bgGreen(message)); };
 var infoMessage = function(message) { console.log(console.colors.bgBlue(message)); };
 var neutralMessage = function(message) { console.log(console.colors.bgBlack(message)); };
 
+var changeEvent = function(evt) {
+	var fileChanged = evt.path;
+	var baseSrc = basePaths.src.replace(root_dir, '');
+
+	fileChanged = fileChanged.split( baseSrc );
+	fileChanged = baseSrc + fileChanged[1];
+
+	infoMessage('File '+ fileChanged + ' was ' + evt.type);
+
+	if (evt.type == 'deleted') {
+		var fileToRemove = fileChanged.replace(baseSrc, basePaths.dest);
+		remove(fileToRemove, {force: true});
+	}
+};
 
 /*
  Useful functions
