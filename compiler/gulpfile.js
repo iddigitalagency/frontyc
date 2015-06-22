@@ -107,8 +107,13 @@ var parentSearch = function _parentSearch(arr, child) {
 gulp.task('clean', function() {
 
 	return remove([
-		basePaths.dest +'**/*',
-		'!'+ basePaths.dest +'empty'
+
+		// Clean assets (images, scripts, styles)
+		basePaths.assets.dest +'**/*',
+
+		// Clean nunjucks static preview
+		paths.nunjucks.dest +'**/*'
+
 	], {force: true});
 
 });
