@@ -59,19 +59,25 @@ var successMessage = function(message) { console.log(console.colors.bgGreen(mess
 var infoMessage = function(message) { console.log(console.colors.bgBlue(message)); };
 var neutralMessage = function(message) { console.log(console.colors.bgBlack(message)); };
 
-var changeEvent = function(evt) {
+var fileChangeEvent = function(evt) {
 	var fileChanged = evt.path;
 	var baseSrc = basePaths.src.replace(root_dir, '');
 
 	fileChanged = fileChanged.split( baseSrc );
-	fileChanged = baseSrc + fileChanged[1];
-
-	infoMessage('File '+ fileChanged + ' was ' + evt.type);
+	fileChanged = fileChanged[1];
 
 	if (evt.type == 'deleted') {
-		var fileToRemove = fileChanged.replace(baseSrc, basePaths.dest);
+		var fileToRemove = basePaths.dest + fileChanged;
+		var fileToRemoveBaseDir = fileToRemove.replace(/\\/g,'/').replace(/\/[^\/]*$/, '').replace(/\\/g,'/').replace( /.*\//, '' );
+
+		// If base dir is equal to root folder
+		if (fileToRemoveBaseDir == 'assets')
+			fileToRemove = fileToRemove.replace('assets', '');
+
 		remove(fileToRemove, {force: true});
 	}
+
+	infoMessage('File '+ baseSrc + fileChanged + ' was ' + evt.type);
 };
 
 /*
@@ -264,6 +270,10 @@ gulp.task('cp', function() {
 	gulp.src([
 		basePaths.assets.src + '*.*'
 	], {base: basePaths.assets.src})
+		.on('error', function(err) {
+			errorMessage(err);
+			this.emit('end');
+		})
 		.pipe(gulp.dest(basePaths.dest));
 
 	return gulp.src([
@@ -276,6 +286,10 @@ gulp.task('cp', function() {
 		'!' + paths.styles.src,
 		'!' + paths.styles.src + '**'
 	], {base: basePaths.assets.src})
+		.on('error', function(err) {
+			errorMessage(err);
+			this.emit('end');
+		})
 		.pipe(gulp.dest(basePaths.assets.dest));
 
 });
@@ -293,6 +307,10 @@ gulp.task('img', function () {
 			svgoPlugins: [{removeViewBox: false}],
 			use: [pngquant()]
 		}))
+		.on('error', function(err) {
+			errorMessage(err);
+			this.emit('end');
+		})
 		.pipe(gulp.dest(paths.images.dest));
 
 });
@@ -537,17 +555,17 @@ var changedFile = {};
 gulp.task('watch', ['default'], function(){
 
 	gulp.watch(paths.styles.src + '**/*', ['css']).on('change', function(file) {
-		changeEvent(file);
+		fileChangeEvent(file);
 	});
 
 	gulp.watch(paths.scripts.src + '**/*', function(file) {
 		changedFile['file'] = file.path;
 		runSequence('js');
-		changeEvent(file);
+		fileChangeEvent(file);
 	});
 
 	gulp.watch(paths.images.src + '**/*', ['img']).on('change', function(file) {
-		changeEvent(file);
+		fileChangeEvent(file);
 	});
 
 	if (compilerOpt.enablePreview) {
@@ -556,13 +574,18 @@ gulp.task('watch', ['default'], function(){
 			paths.nunjucks.data + '**/*',
 			'!' + paths.nunjucks.data + tmpjsondata
 		], ['tpl']).on('change', function(evt) {
-			changeEvent(evt);
+			fileChangeEvent(evt);
 		});
 	}
 
 	gulp.watch([
+		basePaths.assets.src + '*.*'
+	], ['cp']).on('change', function(file) {
+		fileChangeEvent(file);
+	});
+
+	gulp.watch([
 		basePaths.assets.src + '**/*',
-		basePaths.assets.src + '*.*',
 		'!' + paths.images.src,
 		'!' + paths.images.src + '**',
 		'!' + paths.scripts.src,
@@ -570,7 +593,7 @@ gulp.task('watch', ['default'], function(){
 		'!' + paths.styles.src,
 		'!' + paths.styles.src + '**'
 	], ['cp']).on('change', function(file) {
-		changeEvent(file);
+		fileChangeEvent(file);
 	});
 
 	successMessage("Let's write some code ! Frontyc watcher is waiting for you...");
