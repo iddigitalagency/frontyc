@@ -48,6 +48,14 @@ var replace = plugins.replace;
 var gulpif = plugins.if;
 var tmpjsondata = 'compiled_data.json';
 var runSequence = require('run-sequence');
+var argv = require('yargs').argv;
+
+
+/*
+ --dev mode
+ */
+
+var __dev = (argv.dev) ? true : false;
 
 
 /*
@@ -125,9 +133,11 @@ gulp.task('clean', function() {
 
 gulp.task('jshint', function() {
 
-	return gulp.src(paths.scripts.src + '**/*.js')
-		.pipe(plugins.jshint())
-		.pipe(plugins.jshint.reporter(stylish));
+	if(__dev) {
+		return stream = gulp.src(paths.scripts.src + '**/*.js')
+			.pipe(plugins.jshint())
+			.pipe(plugins.jshint.reporter(stylish));
+	}
 
 });
 
@@ -143,7 +153,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 	for (var destFile in vendorList)
 	{
 		var destFileMin = destFile.replace('.'+_ext, '.min.'+_ext);
-		var requireMinify = ( destFile.search('.'+_ext) == -1 || destFile.search('.min.'+_ext) != -1 ) ? false : true;
+		var requireMinify = ( destFile.search('.'+_ext) == -1 || destFile.search('.min.'+_ext) != -1 || __dev == true) ? false : true;
 
 		// Log file generation
 		infoMessage('Creating \'' + destFile + '\'');
@@ -401,6 +411,7 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 				errorMessage(err);
 				this.emit('end');
 			}))
+			.pipe(gulpif(__dev, plugins.batchReplace([ ['.min.js', '.js'], ['.min.css', '.css'] ])))
 			.pipe(plugins.extReplace('.html'))
 			.pipe(gulp.dest(paths.nunjucks.dest));
 	}
@@ -427,22 +438,22 @@ gulp.task('static', ['nunjucks'], function(cb) {
 
 gulp.task('tpl', function() {
 
-	var argv = require('yargs')
+	var param = require('yargs')
 		.usage('Usage: $0 --file [path]')
 		.demand(['file'])
 		.argv;
 
-	if (argv.file != undefined && argv.file !== true)
+	if (param.file != undefined && param.file !== true)
 	{
-		var fileToConvert = paths.nunjucks.src + argv.file;
+		var fileToConvert = paths.nunjucks.src + param.file;
 
 		if (fs.existsSync(fileToConvert))
 		{
 			// Load current converter
-			var replaceThis = require('./converters/'+ compilerOpt.tplConverter.converter +'.js')(argv.file);
+			var replaceThis = require('./converters/'+ compilerOpt.tplConverter.converter +'.js')(param.file);
 
 			// Log file conversion
-			infoMessage('Converting \'' + argv.file + '\'');
+			infoMessage('Converting \'' + param.file + '\'');
 
 			var convertDest = basePaths.dest + compilerOpt.tplConverter.outputPath;
 			var replaceSpecific = compilerOpt.tplConverter.converterAddon;
@@ -457,20 +468,20 @@ gulp.task('tpl', function() {
 				.pipe(plugins.batchReplace(replaceThis))
 				.pipe(plugins.batchReplace(replaceSpecific))
 				.pipe(plugins.extReplace(compilerOpt.tplConverter.outputFormat))
-				.pipe(gulpif(compilerOpt.tplConverter.filesRenaming[argv.file] != undefined, plugins.rename(function (path) {
-					path.basename = compilerOpt.tplConverter.filesRenaming[argv.file];
+				.pipe(gulpif(compilerOpt.tplConverter.filesRenaming[param.file] != undefined, plugins.rename(function (path) {
+					path.basename = compilerOpt.tplConverter.filesRenaming[param.file];
 					path.extname = '';
 				})))
-				.pipe(gulpif(compilerOpt.tplConverter.injectView[path.basename(argv.file, compilerOpt.tplFormat) + compilerOpt.tplConverter.outputFormat] != undefined, plugins.htmlExtend({
+				.pipe(gulpif(compilerOpt.tplConverter.injectView[path.basename(param.file, compilerOpt.tplFormat) + compilerOpt.tplConverter.outputFormat] != undefined, plugins.htmlExtend({
 					annotations: false,
 					verbose: false,
 					root: convertDest
 				})))
-				.pipe(gulpif(compilerOpt.tplConverter.filesRenaming[argv.file] != undefined, gulp.dest(convertDest), gulp.dest(convertDest + path.dirname(argv.file) + '/')));
+				.pipe(gulpif(compilerOpt.tplConverter.filesRenaming[param.file] != undefined, gulp.dest(convertDest), gulp.dest(convertDest + path.dirname(param.file) + '/')));
 		}
 		else
 		{
-			errorMessage('File '+ argv.file +' doesn\'t exist !');
+			errorMessage('File '+ param.file +' doesn\'t exist !');
 		}
 	}
 	else
@@ -488,6 +499,8 @@ gulp.task('tpl', function() {
 var changedFile = {};
 
 gulp.task('watch', ['default'], function(){
+
+	__dev = true;
 
 	gulp.watch(paths.styles.src + '**/*', ['css']).on('change', function(file) {
 		fileChangeEvent(file);
