@@ -6,9 +6,10 @@ Front-end compiler designed with [Gulp](http://gulpjs.com).
 - Easy workflow integration
 - Smart and fast resources compilation
 - Static website generation
+- Modern development using twig views and json models for data binding
 - Template engine converter (myid / twig / blade)
 
-## What third party tools are already integrated with Frontyc ?
+## What third party tools are integrated with Frontyc ?
 
 * Javascript Task Runner : [Gulp](http://gulpjs.com)
 * Front-End Package manager : [Bower](http://bower.io)
@@ -22,8 +23,9 @@ Front-end compiler designed with [Gulp](http://gulpjs.com).
 ## Requirements before install
 
 * **Node.js:** https://nodejs.org
-* **Npm libraries:** Gulp `npm install -g gulp` | Bower `npm install -g bower` | Nunjucks `npm install -g nunjucks`
-* **Ruby and Sass Gem:** https://www.ruby-lang.org/en/documentation/installation/ | http://sass-lang.com/install
+* **Npm libraries:** `npm install -g gulp` | `npm install -g bower` | `npm install -g nunjucks`
+* **Ruby:** https://www.ruby-lang.org/en/documentation/installation/
+* **Sass Gem:** http://sass-lang.com/install
 * **Sass Globbing Plugin:** https://github.com/chriseppstein/sass-globbing
 
 
