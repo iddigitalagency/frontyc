@@ -10,6 +10,7 @@ fi
 if [ ! -f ./--config/compiler.js ]; then
 echo -e "\e[96m--> [2/8] Copying config files"
 cp ./vendor/maoosi/frontyc/compiler/config/*.js ./--config/
+sed -i "2s/.*/var root_dir = '../../../../';/" ./--config/paths.js
 else
 echo -e "\e[90m--> [2/8] Skipped ! Config files already exists..."
 fi
