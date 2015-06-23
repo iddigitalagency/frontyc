@@ -24,26 +24,23 @@ If you want to use it as a boilerplate, you will additionally need to install bo
 
 ### Installing via composer (recommended)
 
-1/ Add the following code into your `composer.json` file before running `composer install` command:
+**1/** Add the following code into your `composer.json` file, then run `composer install` command:
 
 ``` json
-{
-    "require": {
-    	"maoosi/frontyc": "dev-master"
-	}
+"require": {
+	"maoosi/frontyc": "dev-master"
 }
 ```
 
-2/ Go into `vendor/maoosi/frontyc/compiler` folder, then run the following npm setup command :
+**2/** Go into `vendor/maoosi/frontyc/compiler` folder, then run the following npm setup command :
 
 ```shell
-cd compiler
 npm install # sudo npm install on linux
 ```
 
-3/ If you really want to, you can just go into `vendor/maoosi/frontyc/compiler/config/` folder and configure your project by editing files. But if you're using composer, we recommend to skip this step and to change config folder location (refer to the following section).
+**3/** If you really want to, you can just go into `vendor/maoosi/frontyc/compiler/config/` folder and configure your project by editing files. But if you're using composer, **we recommend to skip this step** and to change config folder location (refer to the following section).
 
-4/ If you plan to use Bower for libraries dependency, just copy `bower.json` and `.bowerrc` files into the root of your project.
+**4/** If you plan to use Bower for libraries dependency, just copy `bower.json` and `.bowerrc` files into the root of your project, then run `bower install`.
 
 
 ### Changing the config folder location (recommended when using composer)
@@ -59,7 +56,6 @@ var cfg = {
 	configPath : 'path-to-config-folder/'
 };
 
-
 exports.cfg = cfg;
 ```
 
@@ -73,50 +69,47 @@ When you install the compiler using composer, it could be annoying to run comman
 alias ftyc='function _frontyc(){ (cd ./vendor/maoosi/frontyc/compiler/;gulp "$@") };_frontyc'
 ```
 
-Now you can just run in yout project root directory:
+Now you can just run the follwing commands directly from your project root:
 
 ```shell
-ftyc / ftyc watch / ftyc js / ...
+ftyc / ftyc watch / ...
 ```
-
+> Refer to **usage** section for more available commands.
 
 ### Manual installation
 
-1/ Copy `compiler` folder everywhere you want into your project.
+**1/** Copy `compiler` folder everywhere you want into your project.
 
-2/ Go into `compiler` folder, then run the following npm setup command :
+**2/** Go into `compiler` folder, then run the following npm setup command :
 
 ```shell
-cd compiler
 npm install # sudo npm install on linux
 ```
 
-3/ Go into `compiler/config/` folder and configure your project by editing files.
+**3/** Go into `compiler/config/` folder and configure your project by editing files.
 
-4/ If you plan to use Bower for libraries dependency, just copy `bower.json` and `.bowerrc` files into the root of your project.
+**4/** If you plan to use Bower for libraries dependency, just copy `bower.json` and `.bowerrc` files into the root of your project, then run `bower install`.
 
 
 ### Semi-automated installation (experimented users)
 
 > This install method is specific to unix environment. Moreover, it's designed for bigger projects using composer, bower and git.
 
-1/ Add the following code into your `composer.json` file before running `composer install` command:
+**1/** Add the following code into your `composer.json` file before running `composer install` command:
 
 ``` json
-{
-    "require": {
-    	"maoosi/frontyc": "dev-master"
-	}
+"require": {
+	"maoosi/frontyc": "dev-master"
 }
 ```
 
-2/ Copy `ftyc.sh` file into your project root folder, then run it using the following command:
+**2/** Copy `ftyc.sh` file into your project root folder, then run it using the following command:
 
 ```shell
 ./ftyc.sh
 ```
 
-3/ That's it ! Your project is now ready to use, just think about configurating your project by editing files located into the new `--config` folder.
+**3/** That's it ! Your project is now ready to use, just think about configurating your project by editing files located into the new `--config` folder.
 
 ## Usage
 
@@ -125,34 +118,34 @@ npm install # sudo npm install on linux
 # MAIN COMMANDS:
 
 	# Full project compilation
-	gulp
+	gulp / ftyc
 
 	# Including --dev flag to any command will disable css & js minification for a quicker compilation
-	gulp --dev
+	gulp --dev / ftyc --dev
 
 	# Launch files watcher with smart compilation
-	gulp watch
+	gulp watch / ftyc watch
 
 	# Convert a file to the template engine format of your choice (myid / twig / blade)
-	gulp tpl --file filename.twig
+	gulp tpl --file filename.twig / ftyc tpl --file filename.twig
 
 ######################
 # ADDITIONAL COMMANDS:
 
 	# Detect errors, then compile and uglify all your scripts files including vendor config
-	gulp js
+	gulp js / ftyc js
 
 	# Compile and minify all your styles files using sass and including vendor config
-	gulp css
+	gulp css / ftyc css
 
 	# Compress all your images files {gif, jpg, png, svg}
-	gulp img
+	gulp img / ftyc img
 
 	# If set in your config file, compile all your template files into static html using nunjucks and json models
-	gulp static
+	gulp static / ftyc static
 
 	# Copy all other files you may include in your resources folder (folder copied into assets folder, files copied to root folder)
-	gulp cp
+	gulp cp / ftyc cp
 ```
 
 
