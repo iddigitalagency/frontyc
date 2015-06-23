@@ -117,7 +117,7 @@ npm install # sudo npm install on linux
 }
 ```
 
-**2/** Copy `ftyc.sh` file into your project root folder, then run it using the following command:
+**2/** Copy `compiler/ftyc.sh` file into your project root folder, then run it using the following command:
 
 ```shell
 ./ftyc.sh

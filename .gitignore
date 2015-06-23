@@ -1,9 +1,8 @@
-# Public folder (remove this for git sync)
-/public/
+# Static preview folder (remove this for git sync)
+/--preview/
 
 # Vendor
 /vendor/
-!/vendor/maoosi/frontyc/compiler/config/external.js
 
 # PHP Storm
 /.idea/

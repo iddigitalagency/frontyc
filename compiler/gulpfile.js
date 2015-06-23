@@ -55,7 +55,7 @@ var argv = require('yargs').argv;
  --dev mode
  */
 
-var __dev = (argv.dev) ? true : false;
+var __dev = (argv.dev || process.argv.slice(2)[0] == 'watch') ? true : false;
 
 
 /*
@@ -499,8 +499,6 @@ gulp.task('tpl', function() {
 var changedFile = {};
 
 gulp.task('watch', ['default'], function(){
-
-	__dev = true;
 
 	gulp.watch(paths.styles.src + '**/*', ['css']).on('change', function(file) {
 		fileChangeEvent(file);

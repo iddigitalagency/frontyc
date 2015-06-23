@@ -4,13 +4,13 @@ var root_dir = '../';
 var basePaths = {
 
     src: root_dir + '--sources/', // Path to sources folder
-    dest: root_dir + 'public/', // Path to www / root / public_html
+    dest: root_dir, // Path to www / root / public_html
 
     bower: root_dir + './vendor/bower/',
 
     assets: {
         src: root_dir + '--sources/assets/',
-        dest: root_dir + 'public/assets/'
+        dest: root_dir + 'assets/'
     }
 
 };
@@ -36,11 +36,12 @@ var paths = {
     nunjucks: {
         data: basePaths.src + 'models/',
         src: basePaths.src + 'views/',
-        dest: basePaths.dest,
-        assets: 'assets/'
+        dest: basePaths.dest + '--preview',
+        assets: '../assets/'
     }
 
 };
 
 exports.basePaths = basePaths;
 exports.paths = paths;
+exports.root_dir = root_dir;
