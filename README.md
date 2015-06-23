@@ -1,5 +1,6 @@
 #  Frontyc [beta]
 
+
 **Front-end compiler designed with [Gulp](http://gulpjs.com).**
 
 - Fully-configurable
@@ -8,6 +9,7 @@
 - Static website generation
 - Modern development using twig views and json models for data binding
 - Template engine converter (myid / twig / blade)
+
 
 ## What third party tools are integrated with Frontyc ?
 
@@ -56,7 +58,6 @@ npm install # sudo npm install on linux
 
 **4/** If you plan to use Bower for libraries dependency, just copy `bower.json` and `.bowerrc` files into the root of your project, then run `bower install`.
 
-
 ### Changing the config folder location (recommended when using composer)
 
 > You can change the config folder location by creating the following `external.js` file into `compiler/config` folder:
@@ -104,7 +105,6 @@ npm install # sudo npm install on linux
 
 **4/** If you plan to use Bower for libraries dependency, just copy `bower.json` and `.bowerrc` files into the root of your project, then run `bower install`.
 
-
 ### Semi-automated installation (experimented users)
 
 > This install method is specific to unix environment. Moreover, it's designed for bigger projects using composer, bower and git.
@@ -124,6 +124,7 @@ npm install # sudo npm install on linux
 ```
 
 **3/** That's it ! Your project is now ready to use, just think about configurating your project by editing files located into the new `--config` folder.
+
 
 ## Usage
 
