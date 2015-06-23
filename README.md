@@ -1,17 +1,30 @@
 #  [beta] Frontyc
 
-Front-end compiler designed with [Gulp](http://gulpjs.com). Fully-configurable resources compilation and static website generator.
+Front-end compiler designed with [Gulp](http://gulpjs.com).
+
+- Fully-configurable
+- Easy workflow integration
+- Smart and fast resources compilation
+- Static website generation
+- Template engine converter (myid / twig / blade)
+
+## What third party tools are already integrated with Frontyc ?
+
+* Javascript Task Runner : [Gulp](http://gulpjs.com)
+* Front-End Package manager : [Bower](http://bower.io)
+* Front-End Framework : [Foundation](http://foundation.zurb.com)
+* CSS Preprocessor : [Sass](http://sass-lang.com)
+* Sass Mixin Library : [Bourbon](http://bourbon.io)
+* Sass Conventions Guide : [Csstyle](http://www.csstyle.io) `Not supported by libsass`
+* Templating Engine : [Nunjucks](https://mozilla.github.io/nunjucks/)
 
 
-## Requirements
+## Requirements before install
 
-* Node.js: https://nodejs.org
-* Gulp: `npm install -g gulp`
-* Bower: `npm install -g bower`
-* Nunjucks: `npm install -g nunjucks`
-* Ruby (Used for Sass): https://www.ruby-lang.org/en/documentation/installation/
-* Sass Gem: http://sass-lang.com/install
-* Sass Globbing Plugin: https://github.com/chriseppstein/sass-globbing
+* **Node.js:** https://nodejs.org
+* **Npm libraries:** Gulp `npm install -g gulp` | Bower `npm install -g bower` | Nunjucks `npm install -g nunjucks`
+* **Ruby and Sass Gem:** https://www.ruby-lang.org/en/documentation/installation/ | http://sass-lang.com/install
+* **Sass Globbing Plugin:** https://github.com/chriseppstein/sass-globbing
 
 
 ## Note
@@ -146,17 +159,3 @@ npm install # sudo npm install on linux
 	# Copy all other files you may include in your resources folder (folder copied into assets folder, files copied to root folder)
 	gulp cp  //  ftyc cp
 ```
-
-
-
-
-
-## What's already setup with the project starter ?
-
-* Javascript Task Runner : [Gulp](http://gulpjs.com)
-* Front-End Package manager : [Bower](http://bower.io)
-* Front-End Framework : [Foundation](http://foundation.zurb.com)
-* CSS Preprocessor : [Sass](http://sass-lang.com)
-* Sass Mixin Library : [Bourbon](http://bourbon.io)
-* Sass Conventions Guide : [Csstyle](http://www.csstyle.io) `Not supported by libsass`
-* Templating Engine : [Nunjucks](https://mozilla.github.io/nunjucks/)
