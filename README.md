@@ -95,7 +95,7 @@ npm install # sudo npm install on linux
 
 > This install method is specific to unix environment. Moreover, it's designed for bigger projects using composer, bower and git.
 
-**1/** Add the following code into your `composer.json` file before running `composer install` command:
+**1/** Add the following code into your `composer.json` file, then run composer install command:
 
 ``` json
 "require": {
@@ -118,34 +118,34 @@ npm install # sudo npm install on linux
 # MAIN COMMANDS:
 
 	# Full project compilation
-	gulp / ftyc
+	gulp  //  ftyc
 
 	# Including --dev flag to any command will disable css & js minification for a quicker compilation
-	gulp --dev / ftyc --dev
+	gulp --dev  //  ftyc --dev
 
 	# Launch files watcher with smart compilation
-	gulp watch / ftyc watch
+	gulp watch  //  ftyc watch
 
 	# Convert a file to the template engine format of your choice (myid / twig / blade)
-	gulp tpl --file filename.twig / ftyc tpl --file filename.twig
+	gulp tpl --file filename.twig  //  ftyc tpl --file filename.twig
 
 ######################
 # ADDITIONAL COMMANDS:
 
 	# Detect errors, then compile and uglify all your scripts files including vendor config
-	gulp js / ftyc js
+	gulp js  //  ftyc js
 
 	# Compile and minify all your styles files using sass and including vendor config
-	gulp css / ftyc css
+	gulp css  //  ftyc css
 
 	# Compress all your images files {gif, jpg, png, svg}
-	gulp img / ftyc img
+	gulp img  //  ftyc img
 
 	# If set in your config file, compile all your template files into static html using nunjucks and json models
-	gulp static / ftyc static
+	gulp static  //  ftyc static
 
 	# Copy all other files you may include in your resources folder (folder copied into assets folder, files copied to root folder)
-	gulp cp / ftyc cp
+	gulp cp  //  ftyc cp
 ```
 
 
