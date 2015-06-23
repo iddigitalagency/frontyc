@@ -24,7 +24,7 @@
 
 ## Requirements before install
 
-* **Node.js:** https://nodejs.org
+* **Node.js with npm:** https://nodejs.org
 * **Npm libraries:** `npm install -g gulp` | `npm install -g bower` | `npm install -g nunjucks`
 * **Ruby:** https://www.ruby-lang.org/en/documentation/installation/
 * **Sass Gem:** http://sass-lang.com/install
