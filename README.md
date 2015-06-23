@@ -16,8 +16,7 @@ Front-end compiler designed with [Gulp](http://gulpjs.com). Fully-configurable r
 
 ## Note
 
-`public`, `vendor` and `resources` folders are not required for your project. They are here only as a demo project starter.
-If you want to use it as a boilerplate, you will additionally need to install bower components by running `bower install` in your root folder. 
+`public` and `--sources` folders, even as all the files located in the project root, are not required for your project. They are only here for tests and demo purpose. If you want, you can also use it as a boilerplate for quick project setup.
 
 
 ## Installation
