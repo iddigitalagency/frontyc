@@ -1,6 +1,6 @@
-#  [beta] Frontyc
+#  Frontyc [beta]
 
-Front-end compiler designed with [Gulp](http://gulpjs.com).
+**Front-end compiler designed with [Gulp](http://gulpjs.com).**
 
 - Fully-configurable
 - Easy workflow integration
