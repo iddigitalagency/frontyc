@@ -8,7 +8,7 @@
 - Smart and fast resources compilation
 - Static website generation
 - Modern development using twig views and json models for data binding
-- Template engine converter (myid / twig / blade)
+- Template engine converter (myid / twig)
 
 
 ## What third party tools are integrated with Frontyc ?
@@ -25,10 +25,10 @@
 ## Requirements before install
 
 * **Node.js with npm:** https://nodejs.org
-* **Npm libraries:** `npm install -g gulp` | `npm install -g bower` | `npm install -g nunjucks`
+* **Npm libraries:** `npm install -g bower gulp nunjucks`
 * **Ruby:** https://www.ruby-lang.org/en/documentation/installation/
-* **Sass Gem:** http://sass-lang.com/install
-* **Sass Globbing Plugin:** https://github.com/chriseppstein/sass-globbing
+* **Sass Gem:** http://sass-lang.com/install `sudo gem install sass`
+* **Sass Globbing Plugin:** https://github.com/chriseppstein/sass-globbing `gem install sass-globbing`
 
 
 ## Note
@@ -117,10 +117,10 @@ npm install # sudo npm install on linux
 }
 ```
 
-**2/** Copy `compiler/ftyc.sh` file into your project root folder, then run it using the following command:
+**2/** Then run the following command:
 
 ```shell
-./ftyc.sh
+cp ./vendor/maoosi/frontyc/compiler/ftyc.sh ftyc.sh ; chmod 0777 ftyc.sh ; ./ftyc.sh
 ```
 
 **3/** That's it ! Your project is now ready to use, just think about configurating your project by editing files located into the new `--config` folder.

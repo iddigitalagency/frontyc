@@ -1,29 +1,35 @@
 
 // Import foundation settings
-// 
+//
    @import "foundation_settings";
 
 
 // Import normalize
-// 
+//
    @import "../../../vendor/bower/foundation/scss/normalize";
 
 
 // Import foundation files (uncomment files you need: http://foundation.zurb.com/docs/using-sass.html)
-// 
+//
    @import "foundation_components";
 
 
 // Bourbon mixins
-// 
+//
    @import "../../../vendor/bower/bourbon/app/assets/stylesheets/_bourbon";
 
 
+// Bower vendors list
+//
+  // @import "../../../vendor/bower/slick-carousel/slick/slick.scss";           // --- Slick Carousel
+  // @import "../../../vendor/bower/font-awesome/scss/font-awesome.scss";       // --- Font Awesome
+
+
 // Csstyle.io
-// 
+//
    @import "../../../vendor/bower/csstyle/csstyle";
-   
+
 
 // Partials
-// 
+//
    @import "./partials/**/*";

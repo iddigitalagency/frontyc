@@ -4,8 +4,12 @@
 
     <!-- Meta -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="description" content="">
+
+    <!-- Favicon -->
+    <!-- <link rel="icon" href="favicon.png"> -->
 
     <!-- Title -->
     <title>{{ template.title }}</title>
@@ -13,22 +17,32 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ 'css/app.min.css' | asset }}">
 
-    <!-- Modernizr -->
-    <script src="{{ 'js/modernizr.min.js' | asset }}"></script>
-
     <!-- jQuery -->
     <script src="{{ 'js/jquery.min.js' | asset }}"></script>
 
 </head>
 <body id="csstyle">
 
-    <!-- Main content (injected from views) -->
+    <!--[if lt IE 9]>
+        You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/?locale=en" target="_blank" rel="nofollow">upgrade your browser</a> to improve your experience.
+    <![endif]-->
+
+    <!-- If Javascript is disabled -->
+    <noscript>
+        For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank" rel="nofollow"> instructions how to enable JavaScript in your web browser</a>.
+    </noscript>
+
+    <!-- Content -->
     <main>
         {% block content %}{% endblock %}
     </main>
-    
-    <!-- Application scripts -->
-    <script src="{{ 'js/app.min.js' | asset }}"></script>
+
+    <!-- Gmap API -->
+    <!-- <script src="http://maps.google.com/maps/api/js?sensor=true"></script> -->
+
+    <!-- Scripts -->
+    <script src="{{ 'js/modernizr.min.js' | asset }}" defer async></script>
+    <script src="{{ 'js/app.min.js' | asset }}" defer async></script>
 
 </body>
 </html>
