@@ -11,7 +11,7 @@
 - Template engine converter (myid / twig)
 
 
-## What third party tools are integrated with Frontyc ?
+## Which third party tools are bundled with Frontyc  ?
 
 * Javascript Task Runner : [Gulp](http://gulpjs.com)
 * Front-End Package manager : [Bower](http://bower.io)
@@ -31,7 +31,7 @@
 * **Sass Globbing Plugin:** https://github.com/chriseppstein/sass-globbing `gem install sass-globbing`
 
 
-## Installation
+## INSTALLATION
 
 
 ### Automated installation via composer (recommended)
@@ -55,12 +55,12 @@ cp ./vendor/maoosi/frontyc/compiler/ftyc.sh ftyc.sh ; chmod 0777 ftyc.sh ; ./fty
 **3/** That's it ! Everything is now ready to use.
 
 
-## Configuration
+## CONFIGURATION
 
 Frontyc comes with a default configuration that let you work straight away on your project. However, you can configure everything you need by editing files located into the newly created `--config` folder.
 
 
-## Usage
+## USAGE
 
 ```shell
 ######################
@@ -104,13 +104,17 @@ Frontyc comes with a default configuration that let you work straight away on yo
 
 ## FAQ
 
-### I encounter errors when I run `./ftyc.sh` file
+### What if I use Windows instead of Linux ?
 
-// TODO
+Just try [Babun](http://babun.github.io), a windows shell that integrates shell and bash commands for your favorite system. You will love it and it's fully compatible with Frontyc.
+
+### What if I use OS X instead of Linux ?
+
+I'm sorry for you, but you may encounter several problems with `ftyc.sh` file. It can result in not being able to run Frontyc properly. I'm still working on it in order to make it fully compatible.
 
 ### My terminal return: ftyc command not found...
 
-That means you need to set up a permanent unix alias on your machine :
+That means you need to set up a permanent alias on your machine :
 
 ```shell
 alias ftyc='function _frontyc(){ (cd ./vendor/maoosi/frontyc/compiler/;gulp "$@") };_frontyc'
@@ -153,6 +157,6 @@ exports.cfg = cfg;
 Next step is to copy all the files located into `vendor/maoosi/frontyc/compiler/config/` folder to your new configurated path. Finally, configure your project by editing these files.
 
 
-## License
+## LICENSE
 
 Copyright (c) 2015 Sylvain Simao. Licensed under the MIT license.
