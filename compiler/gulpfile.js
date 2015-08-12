@@ -551,11 +551,10 @@ gulp.task('tpl', function() {
 				}
 				// If there is no subfolder
 				else {
-					if (path.basename(convertDir) !== 'views') {
+					if (path.basename(convertDir) !== path.basename(paths.nunjucks.src))
 						stream = processConversion(convertDir + _path, path.basename(convertDir) + '/' + _path);
-					} else {
+					else
 						stream = processConversion(convertDir + _path, _path);
-					}
 				}
 
 			}
