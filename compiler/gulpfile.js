@@ -49,6 +49,7 @@ var gulpif = plugins.if;
 var tmpjsondata = 'compiled_data.json';
 var runSequence = require('run-sequence');
 var argv = require('yargs').argv;
+var sourcemaps = require('gulp-sourcemaps');
 
 
 /*
@@ -225,7 +226,7 @@ gulp.task('js', ['jshint'], function() {
 		}
 		// Add scripts to app.js
 		else {
-			jsVendorList['app.js'].unshift(paths.scripts.src + currentUnknown);
+			jsVendorList['app.js'].push(paths.scripts.src + currentUnknown);
 		}
 	});
 
@@ -249,7 +250,7 @@ gulp.task('sass', function() {
 	if (compilerOpt.useRubySass) {
 
 		// Sass compilation using ruby sass gem
-		return plugins.rubySass(paths.styles.src + 'libraries.scss', {require: 'sass-globbing', loadPath: paths.styles.src})
+		return plugins.rubySass(paths.styles.src + 'libraries.scss', {require: 'sass-globbing', loadPath: paths.styles.src, sourcemap: true })
 			.pipe(plugins.plumber({
 				errorHandler: function (err) {
 					errorMessage(err);
@@ -257,12 +258,14 @@ gulp.task('sass', function() {
 				}
 			}))
 			.pipe(plugins.rename('app.css'))
+			.pipe(gulpif(__dev, sourcemaps.write('./')))
 			.pipe(gulp.dest(paths.styles.dest));
 
 	} else {
 
 		// Sass compilation using libsass library
 		return gulp.src(paths.styles.src + 'libraries.scss')
+			.pipe(sourcemaps.init())
 			.pipe(plugins.plumber({
 				errorHandler: function (err) {
 					errorMessage(err);
@@ -272,6 +275,7 @@ gulp.task('sass', function() {
 			.pipe(plugins.sassBulkImport())
 			.pipe(plugins.sass())
 			.pipe(plugins.rename('app.css'))
+			.pipe(gulpif(__dev, sourcemaps.write('./')))
 			.pipe(gulp.dest(paths.styles.dest));
 
 	}
@@ -286,7 +290,7 @@ gulp.task('sass', function() {
 gulp.task('css', ['sass'], function() {
 
 	var cssVendorList = JSON.parse(JSON.stringify(vendorFiles.styles));
-	cssVendorList['app.css'].unshift(paths.styles.dest + 'app.css');
+	cssVendorList['app.css'].push(paths.styles.dest + 'app.css');
 	return vendorCompilation(cssVendorList, 'css');
 
 });
