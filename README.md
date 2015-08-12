@@ -36,7 +36,7 @@
 
 ### Automated installation via composer (recommended)
 
-**1/** Add the following requirement into your `composer.json` file, then run composer install command:
+**1/** Add the following repository into your `composer.json` file, then run `composer install` command:
 
 ``` json
 "require": {
@@ -44,13 +44,20 @@
 }
 ```
 
-**2/** If you can't run unix commands on your environment, you'll have to copy manually the .sh file `./vendor/maoosi/frontyc/compiler/ftyc.sh` into your root folder, then execute it `./ftyc.sh`. For others, just run the following command :
+**2/** Just run the following unix command :
 
 ```shell
 cp ./vendor/maoosi/frontyc/compiler/ftyc.sh ftyc.sh ; chmod 0777 ftyc.sh ; ./ftyc.sh
 ```
 
-**3/** That's it ! Your project is now ready to use, just think about to configure your project by editing files located into the new `--config` folder.
+> If you can not run unix commands on your environment, you'll have to copy manually the .sh file `./vendor/maoosi/frontyc/compiler/ftyc.sh` into your root folder, then execute it with command `./ftyc.sh`.
+
+**3/** That's it ! Everything is now ready to use.
+
+
+## Configuration
+
+Frontyc comes with a default configuration that let you work straight away on your project. However, you can configure everything you need by editing files located into the newly created `--config` folder.
 
 
 ## Usage
@@ -101,7 +108,7 @@ cp ./vendor/maoosi/frontyc/compiler/ftyc.sh ftyc.sh ; chmod 0777 ftyc.sh ; ./fty
 
 // TODO
 
-### ftyc command not found...
+### My terminal return: ftyc command not found...
 
 That means you need to set up a permanent unix alias on your machine :
 
@@ -113,7 +120,7 @@ Alternatively, you can also replace `ftyc` by `gulp` for each command.
 
 ### What if I don't want to use composer ?
 
-Well, it's up to you...
+> Well, it's up to you...
 
 **1/** Copy `compiler` folder everywhere you want into your project.
 
@@ -129,7 +136,7 @@ npm install
 
 ### How to change the config folder location ?
 
-> You can change the config folder location by creating the following `external.js` file into `compiler/config` folder:
+You can change the config folder location by creating the following `external.js` file into `compiler/config` folder:
 
 ``` javascript
 /*
