@@ -487,29 +487,18 @@ gulp.task('static', ['nunjucks'], function(cb) {
  Template Engine Format Converter
  */
 
-gulp.task('tpl', function() {
+var processConversion = function(fileToConvert, _file) {
 
-	var param = require('yargs')
-		.usage('Usage: $0 --file [path]')
-		.demand(['file'])
-		.argv;
+	// Load current converter
+	var replaceThis = require('./converters/'+ compilerOpt.tplConverter.converter +'.js')(_file);
 
-	if (param.file != undefined && param.file !== true)
-	{
-		var fileToConvert = paths.nunjucks.src + param.file;
+	// Log file conversion
+	infoMessage('Converting \'' + _file + '\'');
 
-		if (fs.existsSync(fileToConvert))
-		{
-			// Load current converter
-			var replaceThis = require('./converters/'+ compilerOpt.tplConverter.converter +'.js')(param.file);
+	var convertDest = basePaths.dest + compilerOpt.tplConverter.outputPath;
+	var replaceSpecific = compilerOpt.tplConverter.converterAddon;
 
-			// Log file conversion
-			infoMessage('Converting \'' + param.file + '\'');
-
-			var convertDest = basePaths.dest + compilerOpt.tplConverter.outputPath;
-			var replaceSpecific = compilerOpt.tplConverter.converterAddon;
-
-			return 	gulp.src(fileToConvert)
+	return gulp.src(fileToConvert)
 				.pipe(plugins.plumber({
 					errorHandler: function (err) {
 						errorMessage(err);
@@ -519,25 +508,60 @@ gulp.task('tpl', function() {
 				.pipe(plugins.batchReplace(replaceThis))
 				.pipe(plugins.batchReplace(replaceSpecific))
 				.pipe(plugins.extReplace(compilerOpt.tplConverter.outputFormat))
-				.pipe(gulpif(compilerOpt.tplConverter.filesRenaming[param.file] != undefined, plugins.rename(function (path) {
-					path.basename = compilerOpt.tplConverter.filesRenaming[param.file];
+				.pipe(gulpif(compilerOpt.tplConverter.filesRenaming[_file] != undefined, plugins.rename(function (path) {
+					path.basename = compilerOpt.tplConverter.filesRenaming[_file];
 					path.extname = '';
 				})))
-				.pipe(gulpif(compilerOpt.tplConverter.injectView[path.basename(param.file, compilerOpt.tplFormat) + compilerOpt.tplConverter.outputFormat] != undefined, plugins.htmlExtend({
+				.pipe(gulpif(compilerOpt.tplConverter.injectView[path.basename(_file, compilerOpt.tplFormat) + compilerOpt.tplConverter.outputFormat] != undefined, plugins.htmlExtend({
 					annotations: false,
 					verbose: false,
 					root: convertDest
 				})))
-				.pipe(gulpif(compilerOpt.tplConverter.filesRenaming[param.file] != undefined, gulp.dest(convertDest), gulp.dest(convertDest + path.dirname(param.file) + '/')));
-		}
-		else
-		{
-			errorMessage('File '+ param.file +' doesn\'t exist !');
-		}
+				.pipe(gulpif(compilerOpt.tplConverter.filesRenaming[_file] != undefined, gulp.dest(convertDest), gulp.dest(convertDest + path.dirname(_file) + '/')));
+
+};
+
+gulp.task('tpl', function() {
+
+	var param = require('yargs')
+		.usage('Usage: $0 --file [path] / $0')
+		.argv;
+
+	if (param.file != undefined && param.file !== true && path.basename(param.file) !== '*')
+	{
+		var fileToConvert = paths.nunjucks.src + param.file;
+
+		if (fs.existsSync(fileToConvert)) return processConversion(fileToConvert, param.file);
+		else errorMessage('File '+ param.file +' doesn\'t exist !');
 	}
 	else
 	{
-		errorMessage('Invalid argument --file !');
+		var stream;
+		var convertDir = (param.file === undefined) ? paths.nunjucks.src : paths.nunjucks.src + path.dirname(param.file) + '/';
+
+		// If conversion occurs on a folder
+		fs.readdirSync(convertDir).filter(function(_path) {
+			if (_path !== 'layouts') {
+
+				// If there is a subfolder
+				if ( fs.statSync(convertDir + _path).isDirectory() ) {
+					fs.readdirSync(convertDir + _path).filter(function(_file) {
+						stream = processConversion(convertDir + _path + '/' + _file, _path + '/' + _file);
+					});
+				}
+				// If there is no subfolder
+				else {
+					if (path.basename(convertDir) !== 'views') {
+						stream = processConversion(convertDir + _path, path.basename(convertDir) + '/' + _path);
+					} else {
+						stream = processConversion(convertDir + _path, _path);
+					}
+				}
+
+			}
+		});
+
+		return stream;
 	}
 
 });

@@ -1,5 +1,5 @@
 {
-  "name": "maoosi.frontyc",
+  "name": "frontyc",
   "dependencies": {
     "foundation": "~5.5.2",
     "bourbon": "~4.2.3",

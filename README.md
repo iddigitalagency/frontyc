@@ -77,7 +77,7 @@ Frontyc comes with a default configuration that let you work straight away on yo
 	ftyc watch  //  ftyc watch --dev
 
 	# Convert a file, or a folder, to the template engine format of your choice
-	ftyc tpl --file filename.twig // ftyc tpl --file directory/*
+	ftyc tpl  //  ftyc tpl --file file.twig  //  ftyc tpl --file directory/*
 
 ######################
 # ADDITIONAL COMMANDS:
