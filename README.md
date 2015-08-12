@@ -31,16 +31,12 @@
 * **Sass Globbing Plugin:** https://github.com/chriseppstein/sass-globbing `gem install sass-globbing`
 
 
-## Note
-
-`public` and `--sources` folders, even as all the files located in the project root, are not required for your project. They are only here for tests and demo purpose. If you want, you can also use it as a boilerplate for quick project setup.
-
-
 ## Installation
 
-### Installing via composer (recommended)
 
-**1/** Add the following code into your `composer.json` file, then run `composer install` command:
+### Automated installation via composer (recommended)
+
+**1/** Add the following requirement into your `composer.json` file, then run composer install command:
 
 ``` json
 "require": {
@@ -48,17 +44,90 @@
 }
 ```
 
-**2/** Go into `vendor/maoosi/frontyc/compiler` folder, then run the following npm setup command :
+**2/** If you can't run unix commands on your environment, you'll have to copy manually the .sh file `./vendor/maoosi/frontyc/compiler/ftyc.sh` into your root folder, then execute it `./ftyc.sh`. For others, just run the following command :
 
 ```shell
-npm install # sudo npm install on linux
+cp ./vendor/maoosi/frontyc/compiler/ftyc.sh ftyc.sh ; chmod 0777 ftyc.sh ; ./ftyc.sh
 ```
 
-**3/** If you really want to, you can just go into `vendor/maoosi/frontyc/compiler/config/` folder and configure your project by editing files. But if you're using composer, **we recommend to skip this step** and to change config folder location (refer to the following section).
+**3/** That's it ! Your project is now ready to use, just think about to configure your project by editing files located into the new `--config` folder.
+
+
+## Usage
+
+```shell
+######################
+# MAIN COMMANDS:
+
+	# Full project compilation
+	ftyc
+
+	# Including --dev flag to any command will disable
+	# css & js minification for a quicker compilation
+	ftyc --dev
+
+	# Launch files watcher with smart compilation
+	ftyc watch  //  ftyc watch --dev
+
+	# Convert a file, or a folder, to the template engine format of your choice
+	ftyc tpl --file filename.twig // ftyc tpl --file directory/*
+
+######################
+# ADDITIONAL COMMANDS:
+
+	# Detect errors, then compile and uglify all your scripts files
+	# including vendor config
+	ftyc js
+
+	# Compile and minify all your styles files using sass and
+	# including vendor config
+	ftyc css
+
+	# Compress all your images files {gif, jpg, png, svg}
+	ftyc img
+
+	# If set in your config file, compile all your template files
+	# into static html using nunjucks and json models
+	ftyc static
+
+	# Copy all other files you may include in your resources folder
+	# (folder copied into assets folder, files copied to root folder)
+	ftyc cp
+```
+
+## FAQ
+
+### I encounter errors when I run `./ftyc.sh` file
+
+// TODO
+
+### ftyc command not found...
+
+That means you need to set up a permanent unix alias on your machine :
+
+```shell
+alias ftyc='function _frontyc(){ (cd ./vendor/maoosi/frontyc/compiler/;gulp "$@") };_frontyc'
+```
+
+Alternatively, you can also replace `ftyc` by `gulp` for each command.
+
+### What if I don't want to use composer ?
+
+Well, it's up to you...
+
+**1/** Copy `compiler` folder everywhere you want into your project.
+
+**2/** Go into `compiler` folder, then run the following npm setup command :
+
+```shell
+npm install
+```
+
+**3/** Go into `compiler/config/` folder and configure your project by editing files.
 
 **4/** If you plan to use Bower for libraries dependency, just copy `bower.json` and `.bowerrc` files into the root of your project, then run `bower install`.
 
-### Changing the config folder location (recommended when using composer)
+### How to change the config folder location ?
 
 > You can change the config folder location by creating the following `external.js` file into `compiler/config` folder:
 
@@ -76,89 +145,7 @@ exports.cfg = cfg;
 
 Next step is to copy all the files located into `vendor/maoosi/frontyc/compiler/config/` folder to your new configurated path. Finally, configure your project by editing these files.
 
-### Setup Unix alias (recommended when using composer)
 
-When you install the compiler using composer, it could be annoying to run command from the compiler folder. To make it easier, here's an alias that you can easily set up on Unix:
+## License
 
-```shell
-alias ftyc='function _frontyc(){ (cd ./vendor/maoosi/frontyc/compiler/;gulp "$@") };_frontyc'
-```
-
-Now you can just run the follwing commands directly from your project root:
-
-```shell
-ftyc / ftyc watch / ...
-```
-> Refer to **usage** section for more available commands.
-
-### Manual installation
-
-**1/** Copy `compiler` folder everywhere you want into your project.
-
-**2/** Go into `compiler` folder, then run the following npm setup command :
-
-```shell
-npm install # sudo npm install on linux
-```
-
-**3/** Go into `compiler/config/` folder and configure your project by editing files.
-
-**4/** If you plan to use Bower for libraries dependency, just copy `bower.json` and `.bowerrc` files into the root of your project, then run `bower install`.
-
-### Semi-automated installation (experimented users)
-
-> This install method is specific to unix environment. Moreover, it's designed for bigger projects using composer, bower and git.
-
-**1/** Add the following code into your `composer.json` file, then run composer install command:
-
-``` json
-"require": {
-	"maoosi/frontyc": "dev-master"
-}
-```
-
-**2/** Then run the following command:
-
-```shell
-cp ./vendor/maoosi/frontyc/compiler/ftyc.sh ftyc.sh ; chmod 0777 ftyc.sh ; ./ftyc.sh
-```
-
-**3/** That's it ! Your project is now ready to use, just think about configurating your project by editing files located into the new `--config` folder.
-
-
-## Usage
-
-```shell
-######################
-# MAIN COMMANDS:
-
-	# Full project compilation
-	gulp  //  ftyc
-
-	# Including --dev flag to any command will disable css & js minification for a quicker compilation
-	gulp --dev  //  ftyc --dev
-
-	# Launch files watcher with smart compilation
-	gulp watch  //  ftyc watch
-
-	# Convert a file to the template engine format of your choice (myid / twig / blade)
-	gulp tpl --file filename.twig  //  ftyc tpl --file filename.twig
-
-######################
-# ADDITIONAL COMMANDS:
-
-	# Detect errors, then compile and uglify all your scripts files including vendor config
-	gulp js  //  ftyc js
-
-	# Compile and minify all your styles files using sass and including vendor config
-	gulp css  //  ftyc css
-
-	# Compress all your images files {gif, jpg, png, svg}
-	gulp img  //  ftyc img
-
-	# If set in your config file, compile all your template files into static html using nunjucks and json models
-	gulp static  //  ftyc static
-
-	# Copy all other files you may include in your resources folder (folder copied into assets folder, files copied to root folder)
-	gulp cp  //  ftyc cp
-```
+Copyright (c) 2015 Sylvain Simao. Licensed under the MIT license.

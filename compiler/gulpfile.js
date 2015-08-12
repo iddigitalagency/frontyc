@@ -55,7 +55,7 @@ var argv = require('yargs').argv;
  --dev mode
  */
 
-var __dev = (argv.dev || process.argv.slice(2)[0] == 'watch') ? true : false;
+var __dev = (argv.dev) ? true : false;
 
 
 /*
@@ -331,6 +331,57 @@ gulp.task('cp', function() {
 
 
 /*
+ Root Files Copy
+ */
+
+gulp.task('cpfiles', function() {
+
+	var stream, destPath;
+	var filesVendorList = JSON.parse(JSON.stringify(vendorFiles.files));
+
+	for (var destGroup in filesVendorList) {
+
+		for (var destFile in filesVendorList[destGroup]) {
+
+			stream = gulp.src(filesVendorList[destGroup][destFile], {base: path.dirname(filesVendorList[destGroup][destFile])})
+								.pipe(plugins.plumber({
+									errorHandler: function (err) {
+										errorMessage(err);
+										this.emit('end');
+									}
+								}))
+								.pipe(gulp.dest(basePaths.assets.dest + '/' + destGroup));
+		}
+
+	}
+
+	return stream;
+
+});
+
+
+/*
+ Root Files Copy
+ */
+
+gulp.task('cproot', function() {
+
+	return gulp.src([
+			basePaths.src + 'root/.htaccess',
+			basePaths.src + 'root/**/*'
+		], {base: basePaths.src + 'root/'})
+		.pipe(plugins.plumber({
+			errorHandler: function (err) {
+				errorMessage(err);
+				this.emit('end');
+			}
+		}))
+		.pipe(gulp.dest(basePaths.dest));
+
+});
+
+
+/*
  Images Compressor
  */
 
@@ -500,20 +551,41 @@ var changedFile = {};
 
 gulp.task('watch', ['default'], function(){
 
+	// Watch vendor config
+	gulp.watch(configPath + 'vendor.js', function(file) {
+		changedFile['file'] = undefined;
+		delete require.cache[ require.resolve(configPath + 'vendor.js') ];
+		vendorFiles = require(configPath + 'vendor.js').vendorFiles;
+		runSequence('default');
+		fileChangeEvent(file);
+	});
+
+	// Watch root folder
+	gulp.watch([
+		basePaths.src + 'root/.htaccess',
+		basePaths.src + 'root/**/*'
+	], ['cproot']).on('change', function(file) {
+		fileChangeEvent(file);
+	});
+
+	// Watch styles
 	gulp.watch(paths.styles.src + '**/*', ['css']).on('change', function(file) {
 		fileChangeEvent(file);
 	});
 
+	// Watch scripts
 	gulp.watch(paths.scripts.src + '**/*', function(file) {
 		changedFile['file'] = file.path;
 		runSequence('js');
 		fileChangeEvent(file);
 	});
 
+	// Watch images
 	gulp.watch(paths.images.src + '**/*', ['img']).on('change', function(file) {
 		fileChangeEvent(file);
 	});
 
+	// Watch views & models
 	if (compilerOpt.enablePreview) {
 		gulp.watch([
 			paths.nunjucks.src + '**/*',
@@ -524,12 +596,14 @@ gulp.task('watch', ['default'], function(){
 		});
 	}
 
+	// Watch assets files
 	gulp.watch([
 		basePaths.assets.src + '*.*'
 	], ['cp']).on('change', function(file) {
 		fileChangeEvent(file);
 	});
 
+	// Watch assets folders
 	gulp.watch([
 		basePaths.assets.src + '**/*',
 		'!' + paths.images.src,
@@ -551,4 +625,4 @@ gulp.task('watch', ['default'], function(){
  Gulp Default Task
  */
 
-gulp.task('default', ['js', 'css', 'img', 'cp', 'static'], function() {});
+gulp.task('default', ['js', 'css', 'img', 'cp', 'cproot', 'cpfiles', 'static'], function() {});
