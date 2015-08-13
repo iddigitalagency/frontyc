@@ -12,6 +12,7 @@
     "gulp-css-url-adjuster": "^0.2.3",
     "gulp-data": "^1.2.0",
     "gulp-ext-replace": "^0.2.0",
+    "gulp-hash": "^2.2.0",
     "gulp-html-extend": "^1.1.4",
     "gulp-if": "^1.2.5",
     "gulp-imagemin": "^2.2.1",

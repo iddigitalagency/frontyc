@@ -53,6 +53,13 @@ var sourcemaps = require('gulp-sourcemaps');
 
 
 /*
+ uniqid
+ */
+
+var __uniqid = new Date().getTime();
+
+
+/*
  --dev mode
  */
 
@@ -167,6 +174,9 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 			neutralMessage(' |--> ' + vendorList[destFile][n]);
 
 		if (_ext == 'js') {
+			// Remove old version of the file
+			if (requireMinify) remove(paths.scripts.dest + destFileMin.replace('.min', '.min-*'), {force: true});
+
 			stream = gulp.src(vendorList[destFile])
 				.pipe(plugins.plumber({
 					errorHandler: function (err) {
@@ -175,11 +185,16 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 					}
 				}))
 				.pipe(plugins.concat(destFile))
-				.pipe(gulp.dest(paths.scripts.dest))
 				.pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
 				.pipe(gulpif(requireMinify, plugins.uglify()))
-				.pipe(gulpif(requireMinify, gulp.dest(paths.scripts.dest)));
+				.pipe(gulpif(requireMinify, plugins.hash()))
+				.pipe(gulp.dest(paths.scripts.dest))
+				.pipe(gulpif(requireMinify, plugins.hash.manifest('js-manifest.json', true)))
+				.pipe(gulpif(requireMinify, gulp.dest(basePaths.assets.dest)));
 		} else {
+			// Remove old version of the file
+			if (requireMinify) remove(paths.styles.dest + destFileMin.replace('.min', '.min-*'), {force: true});
+
 			stream = gulp.src(vendorList[destFile])
 				.pipe(plugins.plumber({
 					errorHandler: function (err) {
@@ -188,10 +203,12 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 					}
 				}))
 				.pipe(plugins.concat(destFile))
-				.pipe(gulp.dest(paths.styles.dest))
 				.pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
 				.pipe(gulpif(requireMinify, plugins.minifyCss()))
-				.pipe(gulpif(requireMinify, gulp.dest(paths.styles.dest)));
+				.pipe(gulpif(requireMinify, plugins.hash()))
+				.pipe(gulpif(requireMinify, gulp.dest(paths.styles.dest)))
+				.pipe(gulpif(requireMinify, plugins.hash.manifest('css-manifest.json', true)))
+				.pipe(gulpif(requireMinify, gulp.dest(basePaths.assets.dest)));
 		}
 	}
 
@@ -201,6 +218,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 
 gulp.task('js', ['jshint'], function() {
 
+	remove(basePaths.assets.dest + 'js-manifest.json', {force: true});
 	var jsVendorList = JSON.parse(JSON.stringify(vendorFiles.scripts));
 
 	// Add user scripts
@@ -289,6 +307,7 @@ gulp.task('sass', function() {
 
 gulp.task('css', ['sass'], function() {
 
+	remove(basePaths.assets.dest + 'css-manifest.json', {force: true});
 	var cssVendorList = JSON.parse(JSON.stringify(vendorFiles.styles));
 	cssVendorList['app.css'].push(paths.styles.dest + 'app.css');
 	return vendorCompilation(cssVendorList, 'css');
@@ -458,7 +477,26 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 				searchPaths: [paths.nunjucks.src],
 				setUp: function(env) {
 					env.addFilter('asset', function(path) {
-						return paths.nunjucks.assets + path;
+						var assetsDir = basePaths.assets.dest.replace(root_dir, '');
+
+						var _asset = paths.nunjucks.assets + path;
+							_asset = _asset.replace(assetsDir+'../', '');
+
+						if (!__dev) {
+							var cssmanifest = JSON.parse(fs.readFileSync(basePaths.assets.dest + 'css-manifest.json', 'utf8'));
+							var jsmanifest = JSON.parse(fs.readFileSync(basePaths.assets.dest + 'js-manifest.json', 'utf8'));
+
+							var cssDir = paths.styles.dest.replace(basePaths.assets.dest, '');
+							var jsDir = paths.scripts.dest.replace(basePaths.assets.dest, '');
+
+							if ( typeof cssmanifest[_asset.replace(paths.nunjucks.assets + cssDir, '')] !== 'undefined' )
+								_asset = _asset.replace( path , cssDir+cssmanifest[_asset.replace(paths.nunjucks.assets + cssDir, '')] );
+
+							if ( typeof jsmanifest[_asset.replace(paths.nunjucks.assets + jsDir, '')] !== 'undefined' )
+								_asset = _asset.replace( path , jsDir+jsmanifest[_asset.replace(paths.nunjucks.assets + jsDir, '')] );
+						}
+
+						return _asset;
 					});
 					return env;
 				}
@@ -596,14 +634,18 @@ gulp.task('watch', ['default'], function(){
 	});
 
 	// Watch styles
-	gulp.watch(paths.styles.src + '**/*', ['css']).on('change', function(file) {
+	gulp.watch(paths.styles.src + '**/*', function(file) {
+		changedFile['file'] = file.path;
+		if (!__dev) runSequence('css', 'static');
+		else runSequence('css');
 		fileChangeEvent(file);
 	});
 
 	// Watch scripts
 	gulp.watch(paths.scripts.src + '**/*', function(file) {
 		changedFile['file'] = file.path;
-		runSequence('js');
+		if (!__dev) runSequence('js', 'static');
+		else runSequence('js');
 		fileChangeEvent(file);
 	});
 
@@ -652,4 +694,6 @@ gulp.task('watch', ['default'], function(){
  Gulp Default Task
  */
 
-gulp.task('default', ['js', 'css', 'img', 'cp', 'cproot', 'cpfiles', 'static'], function() {});
+gulp.task('default', ['js', 'css', 'img', 'cp', 'cproot', 'cpfiles'], function() {
+	runSequence('static');
+});
