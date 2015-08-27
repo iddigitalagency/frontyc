@@ -206,7 +206,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 				.pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
 				.pipe(gulpif(requireMinify, plugins.minifyCss()))
 				.pipe(gulpif(requireMinify, plugins.hash()))
-				.pipe(gulpif(requireMinify, gulp.dest(paths.styles.dest)))
+				.pipe(gulp.dest(paths.styles.dest))
 				.pipe(gulpif(requireMinify, plugins.hash.manifest('css-manifest.json', true)))
 				.pipe(gulpif(requireMinify, gulp.dest(basePaths.assets.dest)));
 		}
