@@ -6,3 +6,20 @@
 		clear:both;
 	}
 }
+
+@mixin coverbackground() {
+	background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+@mixin headingFont() {
+	color: $header-font-color;
+	font-family: $header-font-family;
+	font-style: $header-font-style;
+	font-weight: $header-font-weight;
+	line-height: $header-line-height;
+	margin-bottom: $header-bottom-margin;
+	margin-top: $header-top-margin;
+	text-rendering: $header-text-rendering;
+}
