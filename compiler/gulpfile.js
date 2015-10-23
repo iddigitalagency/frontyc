@@ -191,7 +191,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 				.pipe(gulpif(requireHashes, plugins.hash()))
 				.pipe(gulp.dest(paths.scripts.dest))
 				.pipe(gulpif(requireHashes, plugins.hash.manifest('js-manifest.json', true)))
-				.pipe(gulpif(requireMinify, gulp.dest(basePaths.assets.dest)));
+				.pipe(gulpif(requireHashes, gulp.dest(basePaths.assets.dest)));
 		} else {
 			// Remove old version of the file
 			if (requireHashes) remove(paths.styles.dest + destFileMin.replace('.min', '.min-*'), {force: true});
@@ -209,7 +209,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 				.pipe(gulpif(requireHashes, plugins.hash()))
 				.pipe(gulp.dest(paths.styles.dest))
 				.pipe(gulpif(requireHashes, plugins.hash.manifest('css-manifest.json', true)))
-				.pipe(gulpif(requireMinify, gulp.dest(basePaths.assets.dest)));
+				.pipe(gulpif(requireHashes, gulp.dest(basePaths.assets.dest)));
 		}
 	}
 
@@ -219,7 +219,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 
 gulp.task('js', ['jshint'], function() {
 
-	remove(basePaths.assets.dest + 'js-manifest.json', {force: true});
+	if (compilerOpt.useHashes) remove(basePaths.assets.dest + 'js-manifest.json', {force: true});
 	var jsVendorList = JSON.parse(JSON.stringify(vendorFiles.scripts));
 
 	// Add user scripts
@@ -308,7 +308,7 @@ gulp.task('sass', function() {
 
 gulp.task('css', ['sass'], function() {
 
-	remove(basePaths.assets.dest + 'css-manifest.json', {force: true});
+	if (compilerOpt.useHashes) remove(basePaths.assets.dest + 'css-manifest.json', {force: true});
 	var cssVendorList = JSON.parse(JSON.stringify(vendorFiles.styles));
 	cssVendorList['app.css'].push(paths.styles.dest + 'app.css');
 	return vendorCompilation(cssVendorList, 'css');
@@ -483,7 +483,7 @@ gulp.task('nunjucks', ['getdatafrommodel'], function() {
 						var _asset = paths.nunjucks.assets + path;
 							_asset = _asset.replace(assetsDir+'../', '');
 
-						if (!__dev) {
+						if (!__dev && compilerOpt.useHashes) {
 							var cssmanifest = JSON.parse(fs.readFileSync(basePaths.assets.dest + 'css-manifest.json', 'utf8'));
 							var jsmanifest = JSON.parse(fs.readFileSync(basePaths.assets.dest + 'js-manifest.json', 'utf8'));
 
