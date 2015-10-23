@@ -1,4 +1,4 @@
-#  Frontyc [beta]
+#  Frontyc
 
 
 **Front-end compiler designed with [Gulp](http://gulpjs.com).**
@@ -40,7 +40,7 @@
 
 ``` json
 "require": {
-	"maoosi/frontyc": "dev-master"
+	"maoosi/frontyc": "1.*"
 }
 ```
 
