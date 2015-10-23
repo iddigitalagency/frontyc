@@ -10,7 +10,7 @@ if(!Modernizr.svg) {
 // Function for detecting Browsers
 var myUserAgent = navigator.userAgent.toLowerCase();
 
-var isChrome = function() { return (myUserAgent.indexOf('chrome') > -1) ? true : false; };
+var isChrome = function() { return (myUserAgent.indexOf('chrome') > -1 && myUserAgent.indexOf('edge') < 0) ? true : false; };
 var isIE = function() { return (myUserAgent.indexOf('msie') > -1 || navigator.appVersion.indexOf('Trident/') > 0) ? true : false; };
 var isFirefox = function() { return (myUserAgent.indexOf('firefox') > -1) ? true : false; };
 var isSafari = function() { return (myUserAgent.indexOf('safari') > -1 && myUserAgent.indexOf('chrome') < 0) ? true : false; };
@@ -20,6 +20,7 @@ var isSafari = function() { return (myUserAgent.indexOf('safari') > -1 && myUser
 $(function() {
 
 	// Foundation init
+    Foundation.global.namespace = '';
 	$(document).foundation();
 
     // Html browser class
