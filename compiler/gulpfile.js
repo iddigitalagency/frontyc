@@ -162,6 +162,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 	{
 		var destFileMin = destFile.replace('.'+_ext, '.min.'+_ext);
 		var requireMinify = ( destFile.search('.'+_ext) == -1 || destFile.search('.min.'+_ext) != -1 || __dev == true) ? false : true;
+		var requireHashes = ( requireMinify === true && compilerOpt.useHashes === true ) ? true : false;
 
 		// Log file generation
 		infoMessage('Creating \'' + destFile + '\'');
@@ -175,7 +176,7 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 
 		if (_ext == 'js') {
 			// Remove old version of the file
-			if (requireMinify) remove(paths.scripts.dest + destFileMin.replace('.min', '.min-*'), {force: true});
+			if (requireHashes) remove(paths.scripts.dest + destFileMin.replace('.min', '.min-*'), {force: true});
 
 			stream = gulp.src(vendorList[destFile])
 				.pipe(plugins.plumber({
@@ -187,13 +188,13 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 				.pipe(plugins.concat(destFile))
 				.pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
 				.pipe(gulpif(requireMinify, plugins.uglify()))
-				.pipe(gulpif(requireMinify, plugins.hash()))
+				.pipe(gulpif(requireHashes, plugins.hash()))
 				.pipe(gulp.dest(paths.scripts.dest))
-				.pipe(gulpif(requireMinify, plugins.hash.manifest('js-manifest.json', true)))
+				.pipe(gulpif(requireHashes, plugins.hash.manifest('js-manifest.json', true)))
 				.pipe(gulpif(requireMinify, gulp.dest(basePaths.assets.dest)));
 		} else {
 			// Remove old version of the file
-			if (requireMinify) remove(paths.styles.dest + destFileMin.replace('.min', '.min-*'), {force: true});
+			if (requireHashes) remove(paths.styles.dest + destFileMin.replace('.min', '.min-*'), {force: true});
 
 			stream = gulp.src(vendorList[destFile])
 				.pipe(plugins.plumber({
@@ -205,9 +206,9 @@ var vendorCompilation = function _vendorCompilation(vendorList, fileType) {
 				.pipe(plugins.concat(destFile))
 				.pipe(gulpif(requireMinify, plugins.rename(destFileMin)))
 				.pipe(gulpif(requireMinify, plugins.minifyCss()))
-				.pipe(gulpif(requireMinify, plugins.hash()))
+				.pipe(gulpif(requireHashes, plugins.hash()))
 				.pipe(gulp.dest(paths.styles.dest))
-				.pipe(gulpif(requireMinify, plugins.hash.manifest('css-manifest.json', true)))
+				.pipe(gulpif(requireHashes, plugins.hash.manifest('css-manifest.json', true)))
 				.pipe(gulpif(requireMinify, gulp.dest(basePaths.assets.dest)));
 		}
 	}

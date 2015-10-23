@@ -10,6 +10,9 @@ var compilerOpt = {
     /* Input format used for views (resources/views/**) */
 	tplFormat : '.twig',
 
+    /* Using or not the hash for minified files (styles.min-14d51c.css) */
+	useHashes : true,
+
 	/* Template engine converter options */
 	tplConverter : {
 
