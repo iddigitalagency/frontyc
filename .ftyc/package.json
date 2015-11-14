@@ -1,0 +1,13 @@
+{
+  "name": "maoosi.frontyc",
+  "version": "2.0.0",
+  "private": true,
+  "lazyDependencies": {
+    "styles": {}
+  },
+  "dependencies": {
+    "colors": "^1.1.2",
+    "gulp": "^3.9.0",
+    "lazy-install": "^0.3.0"
+  }
+}
