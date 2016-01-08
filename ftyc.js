@@ -6,25 +6,78 @@
 /// Required libraries
 var fs = require('fs-extra');
 var yaml = require('yamljs');
+var exec = require('child_process').exec;
+var util = require('util');
+
+var term = require( 'terminal-kit' ).terminal;
+var log = term;
+var logError = term.red;
+var logInfo = term.blue;
+var logSuccess = term.green;
 
 
 /// Constants
-const CWD  = process.cwd();
-const FTYC = __dirname + '/lib';
+var CWD  = process.cwd();
+var FTYC = __dirname;
+var LIB = FTYC + '/lib/';
 
 
-/// Read config
-var config = YAML.load(CWD + '/' + 'ftyc.config.yaml');
+/// Execute code inside Frontyc lib folder
+var cmd = function(command) {
+    exec(command, {cwd: LIB}, (error, stdout, stderr) => {
+        if (error !== null) {
+            logError(error); logError(stdout);
+        }
+    });
+};
 
 
-/// Read user command
-var command = (['init', ''].indexOf( process.argv[2] ) >= 0) ? process.argv[2] : 'gulp';
+/// Init Frontyc inside current folder
+var init = function() {
+    var defaultConfig = FTYC + '/.config';
+    var localConfig = CWD + '/.ftyc';
+
+    // If local config file does not exist, create it !
+    fs.stat(localConfig, function(err, stat) {
+        if(err == null)
+            logError('✕ Frontyc is already installed for that project.\n');
+        else {
+            fs.copy(defaultConfig, localConfig, function(error) {
+                if(error) logError(error);
+                else logSuccess('✔ Frontyc has been installed ! Please edit ftyc.yaml for configuration.\n');
+            });
+        }
+    });
+};
 
 
-/// Init command
-fs.copy(FROM, CWD, function(error) {
-  if(error) console.log(error);
+/// Frontyc self-update
+var selfUpdate = function(sudo) {
+    var f = sudo === true ? 'sudo ' : '';
+    cmd(f + 'npm install');
+};
 
-  // rename .gitignore
-  fs.renameSync(CWD + '/gitignore', CWD + '/.gitignore');
+
+/// User command arguments
+var args = ''; process.argv.forEach((val, index, array) => {
+    if (index > 1) args += val !== undefined ? args.length > 0 ? ' '+ val : val : '';
 });
+
+
+/// Commands
+switch (args) {
+    case 'init':
+        init();
+        break;
+    case 'self-update':
+        selfUpdate();
+        break;
+    case 'self-update --sudo':
+        selfUpdate(true);
+        break;
+    case 'watch':
+        cmd('gulp watch --ftycCwd ' + CWD);
+        break;
+    default:
+        cmd('gulp --ftycCwd ' + CWD);
+}

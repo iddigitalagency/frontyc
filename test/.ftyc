@@ -1,0 +1,18 @@
+{
+
+    "compiler": {
+        "useRubySass": true
+    },
+
+    "modules": {
+        "styles": true,
+        "images": true,
+        "scripts": true
+    },
+
+    "project": {
+        "srcPath": "src/",
+        "destPath": "dist/"
+    }
+
+}

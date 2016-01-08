@@ -1,34 +1,29 @@
 {
-	"name": "frontyc",
-	"version": "2.0.0",
-	"description": "Simple, powerfull and flexible front-end environment built with Gulp.",
-	"homepage": "https://github.com/maoosi/frontyc",
-
-	"author": "maoosi",
-	"license": "MIT",
-
-	"bin": {
-		"outset": "ftyc.js"
-	},
-
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/maoosi/frontyc.git"
-	},
-	"bugs": {
-		"url": "https://github.com/maoosi/frontyc/issues"
-	},
-
-	"keywords": [
-		"boilerplate",
-		"frontend",
-		"compiler",
-		"gulp"
-	],
-
-	"preferGlobal": true,
-
-	"dependencies": {
-		"fs-extra": "^0.14.0"
-	}
+  "name": "frontyc",
+  "version": "2.0.0",
+  "description": "Simple, powerfull and flexible front-end environment built with Gulp.",
+  "homepage": "https://github.com/maoosi/frontyc",
+  "author": "maoosi",
+  "license": "MIT",
+  "bin": {
+    "outset": "ftyc.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maoosi/frontyc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maoosi/frontyc/issues"
+  },
+  "keywords": [
+    "boilerplate",
+    "frontend",
+    "compiler",
+    "gulp"
+  ],
+  "preferGlobal": true,
+  "dependencies": {
+    "fs-extra": "^0.26.4",
+    "terminal-kit": "^0.22.3"
+  }
 }
