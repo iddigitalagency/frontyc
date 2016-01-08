@@ -1,11 +1,11 @@
 # PHP STORM
-./.idea
+.idea
 
 # ENV
-./.DS_Store
+.DS_Store
 
 # NODE
 ./node_modules/*
 
 # SASS
-./.sass-cache
+.sass-cache
