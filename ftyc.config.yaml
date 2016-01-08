@@ -1,6 +1,6 @@
-
 # Compiler config
 compiler:
+    root: ../lib/
 	useRubySass: true
 
 # Modules config
@@ -11,11 +11,5 @@ modules:
 
 # Project config
 project:
-	paths:
-		styles: assets/
-		images: images/
-
-
-# Css Compilation
-output:
-	enablePreview: true
+    srcPath: src/
+    destPath: dist/
