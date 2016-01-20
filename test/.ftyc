@@ -6,8 +6,8 @@
 
     "modules": {
         "styles": true,
-        "images": true,
-        "scripts": true
+        "images": false,
+        "scripts": false
     },
 
     "project": {
